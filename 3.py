@@ -1,3 +1,11 @@
+def untouch_decorator(function):
+    def iterations(num):
+        print(num)
+        function(num)
+    return iterations
+
+
+@untouch_decorator
 def untouchable_function(n):
     if n == 0:
         return
@@ -5,6 +13,4 @@ def untouchable_function(n):
 
 
 if __name__ == '__main__':
-    for i in range(101):
-        untouchable_function(i)
-        print(i)
+    untouchable_function(100)

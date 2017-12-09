@@ -1,0 +1,2100 @@
+<!doctype html>
+<article class="post post_full" id="post_344282">
+<div class="post__wrapper">
+<header class="post__meta">
+<a class="post__user-info user-info" href="https://habrahabr.ru/users/dmitryikh/" title="Автор публикации">
+<span class="default-image_mini default-image_pink">
+<svg aria-hidden="true" class="icon-svg" height="24" role="img" version="1.1" viewbox="0 0 24 24" width="24"><path d="M21.5 24h-19c-1.379 0-2.5-1.122-2.5-2.5v-19c0-1.379 1.122-2.5 2.5-2.5h19c1.379 0 2.5 1.122 2.5 2.5v19c0 1.379-1.122 2.5-2.5 2.5zm-19-23c-.827 0-1.5.673-1.5 1.5v19c0 .827.673 1.5 1.5 1.5h19c.827 0 1.5-.673 1.5-1.5v-19c0-.827-.673-1.5-1.5-1.5h-19zM15.598 12.385zM19.438 15.417l-.002-.005v-.001c-.875-2.226-2.484-3.054-3.445-3.549l-.273-.143c.029-.497-.025-1.034-.167-1.599l-.128.032.123-.044c-.765-2.152-1.757-2.585-2.632-2.967l-.006-.003-.535-2.121c.357-.065.628-.375.628-.752.001-.423-.342-.765-.765-.765s-.766.342-.766.765c0 .358.248.657.581.74l-.825 1.654-.014-.003-.024-.003c-1.053-.033-1.842.369-2.5.947-.633-.322-1.515-.729-2.158-1.814.107-.12.174-.276.174-.45 0-.375-.303-.678-.678-.678s-.678.303-.678.678.303.678.678.678l.221-.04c.416.597 1.09 1.181 1.347 2.828l-.072.091.104.081-.112-.067c-1.157 1.914-.793 4.248.207 5.37-.998 2.546-1.035 4.681-.097 5.868l.002.002.003.003c.119.162.313.233.524.233.189 0 .39-.057.559-.154.312-.179.441-.459.326-.713l-.12.054.119-.056c-.581-1.243-.474-2.713.314-4.37.4.131.778.208 1.145.234l.139.73c.264 1.418.514 2.757 1.297 4.006.132.264.453.387.777.387.122 0 .245-.018.357-.051.385-.116.591-.399.537-.738l-.129.021.125-.042c-.204-.606-.431-1.146-.649-1.67-.373-.894-.725-1.742-.891-2.737.407-.042.797-.129 1.161-.261.825.692 1.661 1.492 2.743 3.406h.001c.072.14.224.215.41.215.105 0 .222-.024.339-.073.365-.155.652-.531.477-1.006v-.001c-.432-1.849-1.426-2.778-2.428-3.547.162-.175.311-.366.442-.576.75.399 1.878 1.005 3.127 2.766l.047.067.011-.008c.151.156.317.24.48.24.096 0 .191-.027.279-.084.306-.194.439-.662.29-1.005zm-8.878-2.493c-.947 0-1.713-.767-1.713-1.713s.767-1.713 1.713-1.713c.947 0 1.713.767 1.713 1.713s-.767 1.713-1.713 1.713zm6.587 4.648l-.084.021v-.001l.084-.02zm-2.007-5.312zm.022 1.006zM11.225 11.604c0 .385-.312.697-.697.697s-.697-.312-.697-.697c0-.385.312-.697.697-.697s.697.312.697.697z"></path></svg>
+</span>
+<span class="user-info__nickname user-info__nickname_small">dmitryikh</span>
+</a>
+<span class="post__time">сегодня в 11:08</span>
+</header>
+<h1 class="post__title post__title_full">
+<span class="post__title-text">Rust vs. C++ на алгоритмических задачах</span>
+</h1>
+<ul class="post__hubs post__hubs_full-post inline-list">
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/rust/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Rust'); }" title="Вы не подписаны на этот хаб">Rust</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/cpp/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'C++'); }" title="Вы не подписаны на этот хаб">C++</a>
+</li>
+</ul>
+<ul class="post__marks inline-list"><li class="inline-list__item inline-list__item_post-type"><a class="post__type-label" href="/sandbox/" title="Перейти в песочницу">Из песочницы</a></li></ul>
+<div class="post__body post__body_full">
+<div class="post__text post__text-html js-mediator-article">Не так давно я стал присматриваться к языку программирования <code>Rust</code>. Прочитав <a href="https://github.com/ruRust/rust_book_ru"><code>Rustbook</code></a>, изучив код некоторых популярных проектов, я решил своими руками попробовать этот язык программирования и своими глазами оценить его преимущества и недостатки, его производительность и эко-систему.<br/>
+<br/>
+
+Язык <code>Rust</code> позиционирует себя, как язык системного программирования, поэтому основным его vis-à-vis следует называть <code>C/C++</code>. Сравнивать же молодой и мультипарадигмальный <code>Rust</code>, который поддерживает множество современных конструкций программирования (таких, как <a href="https://rustbyexample.com/trait/iter.html">итераторы</a>, <a href="https://rustbyexample.com/scope/raii.html"><code>RAII</code></a> и др.) с «голым» <code>C</code> я считаю не правильно. Поэтому в данной статье речь пойдет об сравнении с <code>C++</code>.<br/>
+<br/>
+
+Чтобы сравнить код и производительность <code>Rust</code> и C++, я взял ряд алгоритмических задач, которые нашел в онлайн курсах по программированию и алгоритмам.<br/>
+<br/>
+
+Статья построена следующим образом: в первой части я опишу основные плюсы и минусы, на которые я обратил внимание, работая с <code>Rust</code>. Во второй части я приведу краткое описание алгоритмических задач, которые были решены в <code>Rust</code> и C++, прокомментирую основные моменты реализации программ. В третьей части будет приведена таблица замера производительности программ на <code>Rust</code> и C++.<br/>
+<a name="habracut"></a><br/>
+
+Данная статья достаточно субъективная. Даже сравнение производительности программ, которые делают одинаковые вещи, но написаны на разных языках, подвержены авторскому подходу. Поэтому я не претендую на объективные замеры, и, чтобы не навязывать свои результаты, предлагаю всем ознакомится с кодом программ и с подходом к замеру производительности. Код выложен на <a href="https://github.com/dmitryikh/rust-vs-cpp-bench">github</a>. Буду рад любой критике и замечаниям. Начнем.<br/>
+<br/>
+<h2>Что плохого и хорошего в Rust</h2><br/>
+<b>+</b> Разработчики <code>Rust</code> поставляют свой компилятор уже с «батарейками внутри» тут есть: компилятор, менеджер пакетов (он же сборщик проектов, он же отвечает за запуск тестов), генератор документации и отладчик <code>gdb</code>. Исходный код на <code>Rust</code> может включать в себя сразу тесты и документацию, и чтобы собрать все это не требуется дополнительных программ или библиотек. <br/>
+<br/>
+<b>+</b>Компилятор строг к тексту программы, который подается ему на вход: в его выводе можно увидеть какой код не используется, какие переменные можно изменить на константный тип, и даже предупреждения, связанные со стилем программирования. Часто для ошибок компиляции приведены варианты ее устранения, а ошибки при инстанциировании обобщенного кода (шаблонов) лаконичны и понятны (привет ошибкам с шаблонами <code>STL</code>в <code>C++</code>).<br/>
+<br/>
+<b>+</b> При присваивании или передачи аргументов по умолчанию работает <a href="https://rustbyexample.com/scope/move.html">семантика перемещения</a> (аналог <code>std::move</code>, но не совсем). Если функция принимает ссылку на объект необходимо явно взять адрес (символ <code>&amp;</code>, как в <code>C++</code>).<br/>
+<br/>
+<b>+</b> Все строки — это <a href='https://rustbyexample.com/std/str.htm://rustbyexample.com/std/str.html""'><code>юникод в кодировке UTF-8</code></a>. Да, для подсчета количества символов нужно <code>О(N)</code> операций, но зато никакого зоопарка с кодировками.<br/>
+<br/>
+<b>+</b> Есть поддержка итераторов и <a href="https://rustbyexample.com/fn/closures.html">замыканий (лямбда функций)</a>. Благодаря этому можно писать однострочные конструкции, которые выполняют множество операций с сложной логикой (то, чем славится <code>Python</code>).<br/>
+<br/>
+<b>+-</b>В <code>Rust</code> отсутствуют исключения, обработку ошибок необходимо делать после вызова каждой функции. Причем <code>Rust</code> не позволит получить возвращаемое значение, если вы не обработаете случай неуспешного завершения функции. Есть макросы и встроенные конструкции языка, которые позволяют упростить эту обработку и не сильно раздувать код проверками.<br/>
+<br/>
+<b>-</b> Нужно писать программы так, чтобы компилятор (точнее borrow checker) поверил, что вы не делаете ничего плохого с памятью (или с ресурсами в целом). Часто это работает как надо, но иногда приходится писать код в несколько хитрой форме только для того, что бы удовлетворить условиям borrow checker'а.<br/>
+<br/>
+<b>-</b> В <code>Rust</code> нет классов, но есть типажи, на основе которых можно построить объектно ориентированную программу. Но скопировать реализацию с полиморфными классами в <code>C++</code> в язык <code>Rust</code> напрямую не получиться.<br/>
+<br/>
+<b>-</b> <code>Rust</code> достаточно молод. Мало полезного материала в сети, на StackOverflow. Мало хороших библиотек. Например, нет библиотек для построения GUI, нет портов <code>wxWidgets</code>, <code>Qt</code>.<br/>
+<br/>
+<h2>Алгоритмические задачи на Rust</h2><br/>
+<h3>Бинарный поиск</h3><br/>
+
+Нужно для для каждого значения из вектора <b>B</b> найти его позицию в векторе <b>A</b>. По сути нужно применить <b>n</b> раз бинарный поиск, предварительно отсортировав <b>A</b>, где <b>n</b> — кол-во элементов в <b>B</b>. Поэтому тут я приведу функцию бинарного поиска.<br/>
+<br/>
+<pre><code class="rust">// return position of the element if found (indexing from 1),
+// return -1 otherwise
+fn binary_search(vec: &amp;Vec&lt;u32&gt;, value: u32) -&gt; i32 {
+    let mut l: i32 = 0;
+    let mut r: i32 = vec.len() as i32 - 1;
+    while  l &lt;= r {
+        let i = ((l + r) / 2) as usize;
+        if vec[i] == value {
+          return i as i32 + 1;
+        } else if vec[i] &gt; value {
+          r = i as i32 - 1;
+        } else if vec[i] &lt; value {
+          l = i as i32 + 1;
+        } 
+    }
+    -1
+}
+</code></pre><br/>
+
+Кто первый раз видит <code>Rust</code>, обратите внимание на пару особенностей:<br/>
+<br/>
+<ol>
+<li>Тип возвращаемого значения указывается в конце объявления функции</li>
+<li>Если переменная изменяемая, то нужно указывать модификатор <code>mut</code></li>
+<li><code>Rust</code> не переводит типы неявно, даже числовые. Поэтому нужно писать явный перевод типа <code>l = i as i32 + 1</code></li>
+</ol><br/>
+<h3>Сортировка слиянием</h3><br/>
+
+Формально задача звучит так: для заданного массива подсчитать кол-во перестановок, необходимых для сортировки массива. По факту нам требуется реализовать сортировку слиянием, подсчитывая по ходу длину перестановок элементов. <br/>
+<br/>
+
+Давайте рассмотрим код чтения массива с <code>stdin</code><br/>
+<br/>
+<pre><code class="rust">fn read_line() -&gt; String {
+    let mut line = String::new();
+    io::stdin().read_line(&amp;mut line).unwrap();
+    line.trim().to_string()
+}
+
+fn main() {
+    // 1. Read the array
+    let n: usize = read_line().parse().unwrap();
+    let mut a_vec: Vec&lt;u32&gt; = vec![0; n as usize];
+    for (i, token) in read_line().split_whitespace().enumerate() {
+        a_vec[i] = token.parse().unwrap();    
+    }
+
+...
+</code></pre><br/>
+<ol>
+<li>У классов нет конструкторов, но можно делать статические методы-фабрики, которые возвращают объекты классов, как <code>String::new()</code> выше.</li>
+<li>Вместо исключений функции возвращают объект <code>Option</code>, который содержит <code>None</code> или результат корректного завершения функции. Метод <code>unwrap</code> позволяет получить результат или вызывает <code>panic!</code>, если вернулся <code>None</code>.</li>
+<li>Метод <code>String::parse</code> парсит строку в тип возвращаемого значения, т.е. происходит вывод типа по возвращаемому значению.</li>
+<li><code>Rust</code> поддерживает итераторы (как генераторы в Python). Связка <code>split_whitespace().enumerate()</code> генерирует итератор, который лениво читает следующий токен и инкрементирует счетчик.</li>
+</ol><br/>
+
+Приведу сначала неправильную сигнатуру вызова функции <code>_merge</code>, которая сливает in place два отсортированных подмассива.<br/>
+<br/>
+<pre><code class="rust">fn _merge(left_slice: &amp;mut [u32], right_slice: &amp;mut [u32]) -&gt; u64
+</code></pre><br/>
+
+Данная конструкция не взлетит в <code>Rust</code> без <code>unsafe</code> кода, т.к. тут мы передаем два изменяемых подмассива, которые располагаются в исходном массиве. Система типов в <code>Rust</code> не позволяет иметь две изменяемых переменных на один объект (мы знаем, что подмассивы не пересекаются по памяти, но компилятор — нет). Вместо этого надо использовать такую сигнатуру:<br/>
+<br/>
+<pre><code class="rust">fn _merge(vec: &amp;mut [u32], left: usize, mid: usize, right: usize) -&gt; u64
+</code></pre><br/>
+<h3>Кодирование Хаффмана</h3><br/>
+
+Для заданной строки нужно построить беспрефиксный код и вывести закодированное сообщение. Для данной задачи нужно построить дерево на основе частотных характеристик символов в исходном сообщении. Построение деревьев, списков, графов на <code>Rust</code> — задачи не из простых, т.к., например, в случае двусвязного списка нам необходимо иметь два <code>mut</code> указателей на один нод, а это запрещено системой типов. Поэтому эффективно написать двусвязный список без <code>unsafe</code> кода не получится. В данной задаче мы имеем однонаправленное дерево, поэтому эта особенность нас не коснется, но есть свои сложности реализации.<br/>
+<br/>
+
+Заведем класс Node:<br/>
+<br/>
+<pre><code class="rust">// Type of the reference to the node
+type Link = Option&lt;Box&lt;Node&gt;&gt;;
+
+// Huffman tree node struct
+#[derive(Debug,Eq)]
+struct Node {
+    freq: u32,
+    letter: char,
+    left: Link,
+    right: Link,
+}
+
+impl Ord for Node {
+    // reverse order to make Min-Heap
+    fn cmp(&amp;self, b: &amp;Self) -&gt; Ordering {
+        b.freq.cmp(&amp;self.freq)
+    }
+}
+</code></pre><br/>
+<ol>
+<li>Можем использовать типы до их описания.</li>
+<li>Тут можно видеть странный синтаксис наследования <code>#[derive(Debug,Eq)]</code>. <code>Debug</code> — поддерживаем форматированную печать объекта по-умолчанию. <code>Eq</code> — определяем операцию сравнения на равенство.</li>
+<li>Для Node определяется типаж сравнения на больше/меньше <code>Ord</code>. Типажи позволяют расширять возможности объектов. В частности, здесь мы сможем использовать <code>Node</code> для хранения Min-куче.</li>
+</ol><br/>
+
+Метод для посещения нод дерева сверху вниз и для составления таблицы кодирования.<br/>
+<br/>
+<pre><code class="rust">impl Node {
+...
+    // traverse tree building letter-&gt;code `map`
+    fn build_map(&amp;self, map: &amp;mut HashMap&lt;char, String&gt;, prefix: String) {
+        match &amp;self.right {
+            &amp;Some(ref leaf) =&gt; leaf.build_map(map, prefix.clone() + "1"),
+            _ =&gt; { },
+        }
+        match &amp;self.left {
+            &amp;Some(ref leaf) =&gt; { leaf.build_map(map, prefix.clone() + "0"); },
+            _ =&gt; { map.insert(self.letter, prefix); },
+        }
+    }
+}
+</code></pre><br/>
+<ol>
+<li>Рекурсивно вызывает ветки бинарного дерева, если их указатель не пустой <code>&amp;Some(ref leaf)</code>.</li>
+<li>Конструкция <code>match</code> похожа на <code>switch</code> в <code>C</code>. <code>match</code> должен обработать все варианты, поэтому тут присутсвует <code>_ =&gt; { }</code>.</li>
+<li>Помните про семантику перемещения по-умолчанию? Поэтому нам нужно писать <code>prefix.clone()</code>, чтобы в каждую ветвь дерева передалась своя строка.</li>
+</ol><br/>
+<h3>Декодирование Хаффмана</h3><br/>
+
+Обратная задача: для известной таблицы кодирования и закодированной строки получить исходное сообщение. Для декодирования удобно пользоваться бинарным деревом кодирования, поэтому в программе нам нужно из таблицы кодирования получить дерево декодирования. На словах задача простая: нужно перемещаться вниз по дереву (0 — влево, 1 — вправо), создавая промежуточные узлы при необходимости, и в листья дерева помещать символ исходного сообщения. Но для <code>Rust</code> задача оказалась сложная, ведь нам нужно перемещаться по изменяемым ссылкам, создавать объекты, и при этом избегать ситуации, когда объектом владеет более одной переменной. Код функции заполнения бинарного дерева:<br/>
+<br/>
+<pre><code class="rust">fn add_letter(root: &amp;mut Link, letter: char, code: &amp;str) {
+    let mut p: &amp;mut Node = root.as_mut().unwrap();
+    for c in code.chars() {
+        p = match {p} {
+            &amp;mut Node {left: Some(ref mut node), ..} if c == '0' =&gt; {
+                node
+            },
+            &amp;mut Node {left: ref mut opt @ None, ..} if c == '0' =&gt; {
+                *opt = Node::root();
+                opt.as_mut().unwrap()
+            },
+            &amp;mut Node {right: Some(ref mut node), ..} if c == '1' =&gt; {
+                node
+            },
+            &amp;mut Node {right: ref mut opt @ None, ..} if c == '1' =&gt; {
+                *opt = Node::root();
+                opt.as_mut().unwrap()
+            },
+            _ =&gt; { panic!("error"); }
+        }
+    }
+    p.letter = letter;
+}
+</code></pre> <br/>
+<ol>
+<li>Тут <code>match</code> используется для сравнения структуры переменной <code>p</code>. <code>&amp;mut Node {left: Some(ref mut node), ..} if c == '0'</code> означает «если <code>p</code> это изменяемая ссылка на объект <code>Node</code> у, которого поле <code>left</code> указывает на существующий <code>node</code> и при этом символ <code>c</code> равен '0'».</li>
+<li>В <code>Rust</code> нет исключений, поэтому <code>panic!("...")</code> раскрутит стек и остановит программу (или поток).</li>
+</ol><br/>
+<h3>Расстояние Левенштейна</h3><br/>
+
+Нужно для двух строк посчитать расстояние Левенштейна — кол-во действий редактирования строк, чтобы из одной получить другую. Код функции:<br/>
+<br/>
+<pre><code class="rust">fn get_levenshtein_distance(str1: &amp;str, str2: &amp;str) -&gt; u32 {
+    let n = str1.len() + 1;
+    let m = str2.len() + 1;
+    // compute 2D indexes into flat 1D index
+    let ind = |i, j| i * m + j;
+    let mut vec_d: Vec&lt;u32&gt; = vec![0; n * m];
+    for i in 0..n {
+        vec_d[ind(i, 0)] = i as u32;
+    }
+    for j in 0..m {
+        vec_d[ind(0, j)] = j as u32;
+    }
+
+    for (i, c1) in str1.chars().enumerate() {
+        for (j, c2) in str2.chars().enumerate() {
+            let c =  if c1 == c2 {0} else {1};
+            vec_d[ind(i + 1, j + 1)] = min( min( vec_d[ind(i, j + 1)] + 1
+                                               , vec_d[ind(i + 1, j)] + 1
+                                               )
+                                          , vec_d[ind(i, j)] + c
+                                          );
+        }
+    }
+  return vec_d[ind(n - 1, m - 1)];
+}
+</code></pre><br/>
+<ol>
+<li><code>str1: &amp;str</code> — это срез строки. Легковесный объект, который указывает на строку в памяти, аналог <code>std::string_view</code> C++17.</li>
+<li><code>let ind = |i, j| i * m + j;</code> — такой конструкцией определяется лямбда функция.</li>
+</ol><br/>
+<h2>Замеры производительности Rust vs C++</h2><br/>
+
+В конце, как обещал, прикладываю таблицу сравнения времени работы программ, описанных выше. Запуск производился на современной рабочей станции Intel Core i7-4770, 16GB DDR3, SSD, Linux Mint 18.1 64-bit. Использовались компиляторы:<br/>
+<br/>
+<pre><code class="bash">[&gt;] rustc --version
+rustc 1.20.0 (f3d6973f4 2017-08-27)
+[&gt;] g++ -v
+...
+gcc version 7.2.0
+</code></pre><br/>
+<img src="https://habrastorage.org/webt/ll/mw/xd/llmwxdftpl_gjxwrv5sg-xmgn5w.png"/><br/>
+<br/>
+
+Пару замечаний по результатам:<br/>
+<br/>
+<ol>
+<li>Измерялось полное время работы программы, в которое включено чтение данных, полезные действия и вывод в <code>/dev/null</code></li>
+<li>Делалось 10 прогонов каждой задачи на каждом наборе данных, далее результаты усреднялись</li>
+<li>Все скрипты, производящие компиляцию, подготовку тестовых данных и замеры производительности, представлены в репозитории. К ним есть описание. </li>
+<li>По моему мнению, <code>C++</code> проигрывает из-за библиотеки потокового чтения/записи <code>iostream</code>. Но эту гипотезу еще предстоит проверить.И да, в коде есть <code>std::sync_with_stdio(false)</code></li>
+<li>По моему мнению, <code>Rust</code> сильно проигрывает в тесте <code>Huffman encoding</code> по причине <a href="https://www.rust-lang.org/en-US/faq.html#why-are-rusts-hashmaps-slow"><code>медленных хешей в HashMap</code></a></li>
+<li>На мой взгляд, на данных задачах <code>Rust</code> показал, что по производительности он не уступает <code>C++</code></li>
+</ol><br/>
+<h2>Заключение</h2><br/>
+
+Повторюсь, что статья субъективна, и признана в первую очередь оценить в грубом масштабе, где находится <code>Rust</code> по отношению к <code>C++</code>. Если у вас есть пожелания, идеи или замечания, которые позволят добавить статье объективности, пишите в комментарии.<br/>
+<br/>
+
+Вы можете ознакомиться со всеми кодами, необходимыми для повторения замеров <a href="https://github.com/dmitryikh/rust-vs-cpp-bench">на github</a>.<br/>
+<br/>
+
+Спасибо, что дочитали до конца!</div>
+<script data-counter="2820404" id="js-mpf-mediator-init">!function(e){function t(t,n){if(!(n in e)){for(var r,a=e.document,i=a.scripts,o=i.length;o--;)if(-1!==i[o].src.indexOf(t)){r=i[o];break}if(!r){r=a.createElement("script"),r.type="text/javascript",r.async=!0,r.defer=!0,r.src=t,r.charset="UTF-8";;var d=function(){var e=a.getElementsByTagName("script")[0];e.parentNode.insertBefore(r,e)};"[object Opera]"==e.opera?a.addEventListener?a.addEventListener("DOMContentLoaded",d,!1):e.attachEvent("onload",d):d()} } }t("//top-fwz1.mail.ru/js/code.js","_tmr"),t("//mediator.imgsmail.ru/2/mpf-mediator.min.js","_mediator")}(window);</script>
+</div>
+<dl class="post__tags">
+<dt class="post__tags-label">Метки:</dt>
+<dd class="post__tags-list"> <ul class="inline-list inline-list_fav-tags js-post-tags">
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Brust%5D&amp;target_type=posts" rel="tag">rust</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%BF%D1%80%D0%BE%D0%B8%D0%B7%D0%B2%D0%BE%D0%B4%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D1%8C%5D&amp;target_type=posts" rel="tag">производительность</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bc%2B%2B%5D&amp;target_type=posts" rel="tag">c++</a></li>
+</ul>
+<button class="btn btn_outline_grey btn_mini hidden js-fav-edit-link" data-id="344282" data-type="2" onclick="show_edit_tags(this)" type="button">Добавить метки</button>
+</dd>
+</dl>
+</div>
+</article>, <article class="post post_full" id="post_344270">
+<div class="post__wrapper">
+<header class="post__meta">
+<a class="post__user-info user-info" href="https://habrahabr.ru/users/dnagor/" title="Автор публикации">
+<img class="user-info__image-pic user-info__image-pic_small" height="24" src="//habrastorage.org/getpro/habr/avatars/dda/712/874/dda712874a88b0ae6cbd6361bdf613dd.jpg" width="24"/>
+<span class="user-info__nickname user-info__nickname_small">dnagor</span>
+</a>
+<span class="post__time">вчера в 22:41</span>
+</header>
+<h1 class="post__title post__title_full">
+<span class="post__title-text">Взаимодействие веб-страницы с Ethereum</span>
+</h1>
+<ul class="post__hubs post__hubs_full-post inline-list">
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/solidity/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Solidity'); }" title="Вы не подписаны на этот хаб">Solidity</a>
+</li>
+</ul>
+<ul class="post__marks inline-list"><li class="inline-list__item inline-list__item_post-type"><a class="post__type-label" href="/sandbox/" title="Перейти в песочницу">Из песочницы</a></li></ul>
+<div class="post__body post__body_full">
+<div class="post__text post__text-html js-mediator-article">В сети появилось довольно много материалов про <a href="https://habrahabr.ru/post/336132/">разработку для блокчейн Ethereum</a> и про смарт-контракты, а так же про то, как создавать эти самые <a href="https://habrahabr.ru/post/312008/">смарт-контракты</a>. <br/>
+<br/>
+
+В конце концов, есть <a href="http://solidity.readthedocs.io/en/latest/">официальная документация</a> и <a href="https://stackoverflow.com/">stackoverflow</a>. <br/>
+<br/>
+
+В то же время, долго разбираться в документации не хочется, и многие разработчики в последнее время хотят побыстрее что-то пощупать руками и написать что-нибудь под эфириум, а так как вопросов возникает масса и источники разрознены, я решил собрать в одном месте простой пошаговый мануал с картинками по созданию своего первого dapp (от decentralized app) — децентрализованного приложения. Он будет представлять из себя связку смарт-контракта с веб-интерфейсом. То есть чтобы с помощью веба можно было доставать информацию из блокчейна и пихать ее туда. Постараюсь быть кратким, шаги буду объяснять по ходу дела.<br/>
+<a name="habracut"></a><br/>
+<b>Делай раз: ставим geth</b><br/>
+<br/>
+
+Тут ничего сложного нет — качаем <a href="https://geth.ethereum.org/downloads/">отсюда</a> дистрибутив под свою систему, устанавливаем в какую-нибудь папку. <br/>
+<br/>
+<div class="spoiler"><b class="spoiler_title">Картинка</b><div class="spoiler_text"><img alt="image" src="https://habrastorage.org/getpro/habr/post_images/b88/f7a/04d/b88f7a04d5dad0bff5482ce8103ab67e.png"/></div></div><br/>
+
+ Затем заходим в папку проводником, и видим примерно следующее:<br/>
+<br/>
+<div class="spoiler"><b class="spoiler_title">Картинка</b><div class="spoiler_text"><img alt="image" src="https://habrastorage.org/getpro/habr/post_images/f6a/9b4/714/f6a9b4714ac322c9470f8bb075baf77a.png"/><br/>
+</div></div> <br/>
+
+Прямо в строке, где прописывается путь до папки, <img alt="image" src="https://habrastorage.org/getpro/habr/post_images/d6a/927/ede/d6a927edecbb28a7a7f86970f9ebb8ce.png"/> вызываем командную строку: вместо пути набираем в ней cmd, жмем Enter. <br/>
+<img alt="image" src="https://habrastorage.org/getpro/habr/post_images/94b/69f/b4f/94b69fb4ff88fbc8fa1674b4c00692a5.png"/><br/>
+<br/>
+
+В командной строке вызываем <code>geth --dev --rpc --rpcport 8545 --rpcaddr 0.0.0.0 --rpccorsdomain "*" --rpcapi "eth,web3,personal" console</code> <br/>
+<br/>
+
+В результате получаем что-то вроде этого:<br/>
+<br/>
+<img alt="image" src="https://habrastorage.org/getpro/habr/post_images/b97/ae4/688/b97ae4688b51791e3848d67bb969b976.png"/><br/>
+<br/>
+
+Поздравляю, ваш локальный блокчейн в режиме develpment успешно создан! Более того, вы попросили geth работать в режиме RPC-сервера (от remote procedure call) и чтобы он слушал порт 8545. <br/>
+<br/>
+
+Если вы что-нибудь испортите в вашем тестовом блокчейне — ничего страшного, его можно в любой момент создать заново, предварительно удалив все файлы из папки <code>C:\Users\<i>Имя_Пользователя</i>\AppData\Local\Temp\ethereum_dev_mode\geth\chaindata</code>. Если вы хотите хранить ваш локальный блокчейн в другой папке, то тогда вам придется попросить об этом geth примерно вот так: <code>geth --dev --datadir "D:\testlocalchain"</code><br/>
+<br/>
+
+Все возможные флаги и параметры вашей текущей версии geth можно получить, как водится, вызовом из консоли вашего geth c флагом помощи: <code>geth --help</code><br/>
+<br/>
+
+Начать пользоваться web3.js можно уже сейчас, но я предложу сделать еще пару действий. <br/>
+<br/>
+<b>Делай два: запускаем программу-кошелек</b><br/>
+<br/>
+
+Качаем и устанавливаем эфириум-кошелек. Например, <a href="https://github.com/ethereum/mist/releases">Mist</a> <br/>
+<br/>
+
+В папке, куда вы его поставили находим файл Mist.exe и создаем для него ярлык. <br/>
+<br/>
+<div class="spoiler"><b class="spoiler_title">Картинка</b><div class="spoiler_text"><img alt="image" src="https://habrastorage.org/getpro/habr/post_images/e65/10c/79a/e6510c79a4886c7253d6775c91683aa7.png"/><br/>
+</div></div><br/>
+
+В свойствах ярлыка указываем <code>--rpc http://localhost:8545</code><br/>
+<br/>
+<div class="spoiler"><b class="spoiler_title">Картинка</b><div class="spoiler_text"><img alt="image" src="https://habrastorage.org/getpro/habr/post_images/a14/b99/ac6/a14b99ac6bf580157b70182f3e4a6fa1.png"/><br/>
+</div></div> <br/>
+
+и запускаем его. <br/>
+<br/>
+
+Теперь можно создать основной кошелек из этой программы, нажав на «Добавить аккаунт». <br/>
+<br/>
+<div class="spoiler"><b class="spoiler_title">Картинка</b><div class="spoiler_text"><img alt="image" src="https://habrastorage.org/getpro/habr/post_images/b80/f96/f28/b80f96f2829e73db447afa6add6ee370.png"/><br/>
+</div></div> <br/>
+
+Тут, я думаю, сами разберетесь. <br/>
+<br/>
+<b>Делай три: деплоим в локальный блокчейн самый простой контракт</b><br/>
+<br/>
+
+Прежде, чем устанавливать новый контракт, на вашем счету должно быть хоть немного эфира. <br/>
+
+Как же его получить? Переходим в нашу geth-консоль и пишем там команду <code>miner.start()</code>, после чего через пару секунд прям поверх бегущих строчек вызываем <code>miner.stop()</code> и жмем Enter<br/>
+<br/>
+
+У меня за пару секунд получилось намайнить 48 локальных эфиров, что сразу же отразилось в кошельке Mist. Теперь можно приступить к установке простого контракта.<br/>
+<br/>
+
+В Mist заходим в раздел Контракты -&gt; Установить новый контракт<br/>
+<br/>
+
+В Исходный код контракта на Solidity вставляем<br/>
+<br/>
+<pre><code class="javascript">pragma solidity ^0.4.13;
+
+contract Simple{
+    
+    uint256 private a;
+    
+    function getA() constant returns (uint256) {
+        return a;
+    }
+    
+    function setA(uint256 newValue) {
+        a = newValue;
+    }
+}
+</code></pre><br/>
+
+Выбираем в выпадающем списке справа Simple и жмем установить. Вводим пароль кошелька. Тем самым вы создали транзакцию, которую нужно еще замайнить. Опять запускаем в geth-консоли <code>miner.start()</code> и получаем наш новый контракт. <br/>
+
+После того, как транзакция получит 12 подтверждений, остановите майнер. Теперь нас ждет самое инересное! <br/>
+<br/>
+<b>Делай четыре: качаем библиотеку web3.js и создаем простой html</b> <br/>
+<br/>
+<a href="https://github.com/ethereum/web3.js/tree/develop/dist">https://github.com/ethereum/web3.js/tree/develop/dist</a> Возьмем оттуда файл web3.js и сохраним в какую-нибудь папку. В этой же папке создадим файл a.html следующего содержания:<br/>
+<br/>
+<pre><code class="javascript">&lt;script src="web3.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+try {
+web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
+alert (web3.eth.accounts[0]);
+}
+catch (error) {
+alert(error);
+}
+&lt;/script&gt;
+</code></pre><br/>
+
+Если ваш geth в это время работает в режиме RPC-сервера, то запустив эту страницу вы увидите что-то вроде <br/>
+<br/>
+<img alt="image" src="https://habrastorage.org/getpro/habr/post_images/8e4/169/b19/8e4169b19acd65120f9516a7dca18ef2.png"/><br/>
+<br/>
+
+То есть эта страница покажет адрес вашего кошелька. Либо же:<br/>
+<br/>
+<img alt="image" src="https://habrastorage.org/getpro/habr/post_images/0f2/bc0/44a/0f2bc044a31b0710450c1f8f4275f9f9.png"/><br/>
+<br/>
+
+, если сервер не запущен, либо произошла какая-то другая ошибка соединения. <br/>
+<br/>
+
+Обычно, типичная задача — это взаимодействие страницы с каким-либо контрактом. <br/>
+<br/>
+<b>Делай пять: взаимодействуем с контрактом</b><br/>
+<br/>
+
+Для того, чтобы из страницы связаться с контрактом, необходимо знать две вещи: его адрес и его ABI — интерфейс взаимодействия с этим контрактом. Адрес мы можем посмотреть в Mist. <br/>
+<br/>
+<img alt="image" src="https://habrastorage.org/getpro/habr/post_images/bff/f59/be5/bfff59be518dc74939cff11349dbe957.png"/><br/>
+<br/>
+
+В моем случае он вот такой: 0x000193dC23d006DFd048533e31C66B0f0Dd9aEbA<br/>
+<br/>
+
+Можем прямо здесь же вызвать функцию SetA нашего контракта. <br/>
+<br/>
+<img alt="image" src="https://habrastorage.org/getpro/habr/post_images/97e/553/7ba/97e5537ba3c07c702f375ba605e1ee43.png"/><br/>
+<br/>
+
+Я поставил 777. Нажимаем выполнить. Теперь нужно эту транзакцию замайнить, вызвав <code>miner.start()</code><br/>
+<br/>
+
+Теперь я хочу получить это значение на нашей веб-странице. Зайдем на <a href="https://remix.ethereum.org/">remix.ethereum.org</a> создадим новый файл simple.sol и в разделе details сможем найти наш ABI интерфейс. Пишу не сильно подробно, благо получить этот самый интерфейс, зная код контракта, не так сложно. В нашем случае он выглядит так: <br/>
+<br/>
+<pre><code>[{"constant":true,"inputs":[],"name":"getA","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"newValue","type":"uint256"}],"name":"setA","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]
+</code></pre><br/>
+
+Теперь возвращаемся к редактированию нашего файла a.html и внутри скрипта, удаляем первый алерт и пишем следующие строки, чтобы в итоге получилось следующее:<br/>
+<br/>
+<pre><code class="javascript">&lt;script src="web3.js"&gt;&lt;/script&gt;
+
+&lt;script type="text/javascript"&gt;
+try {
+web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
+	
+var SimpleABI = [{"constant":true,"inputs":[],"name":"getA","outputs":
+[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"newValue","type":"uint256"}],"name":"setA","outputs":
+[],"payable":false,"stateMutability":"nonpayable","type":"function"}];
+
+var ContractAdress = "0x000193dC23d006DFd048533e31C66B0f0Dd9aEbA";
+
+var SimpleContract = web3.eth.contract(SimpleABI);
+var Simple = SimpleContract.at(ContractAdress);
+
+alert (Simple.getA());
+}
+catch (error) {
+alert(error);
+}
+&lt;/script&gt;
+</code></pre><br/>
+
+Обновляем страничку, и что мы видим?<br/>
+<br/>
+<img alt="image" src="https://habrastorage.org/getpro/habr/post_images/f97/f75/756/f97f75756c14b45cfdbd0f504de72400.png"/><br/>
+<br/>
+
+Все, профит. Таким же образом можно из JavaScript вызывать функции вашего контракта, передавая им параметры ну и всякое там делать, что позволяет либа web3.js. А позволяет она многое (курим доки).<br/>
+<br/>
+
+Чтобы работать с боевым блокчейном, необходимо будет либо на своей машине держать синхронизированную ноду, либо знать адрес и порт какого-нибудь RPC-сервера. Всё, всем добра!</div>
+<script data-counter="2820404" id="js-mpf-mediator-init">!function(e){function t(t,n){if(!(n in e)){for(var r,a=e.document,i=a.scripts,o=i.length;o--;)if(-1!==i[o].src.indexOf(t)){r=i[o];break}if(!r){r=a.createElement("script"),r.type="text/javascript",r.async=!0,r.defer=!0,r.src=t,r.charset="UTF-8";;var d=function(){var e=a.getElementsByTagName("script")[0];e.parentNode.insertBefore(r,e)};"[object Opera]"==e.opera?a.addEventListener?a.addEventListener("DOMContentLoaded",d,!1):e.attachEvent("onload",d):d()} } }t("//top-fwz1.mail.ru/js/code.js","_tmr"),t("//mediator.imgsmail.ru/2/mpf-mediator.min.js","_mediator")}(window);</script>
+</div>
+<dl class="post__tags">
+<dt class="post__tags-label">Метки:</dt>
+<dd class="post__tags-list"> <ul class="inline-list inline-list_fav-tags js-post-tags">
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bsolidity%5D&amp;target_type=posts" rel="tag">solidity</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bblockchain%5D&amp;target_type=posts" rel="tag">blockchain</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bethereum%5D&amp;target_type=posts" rel="tag">ethereum</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bweb3.js%5D&amp;target_type=posts" rel="tag">web3.js</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bjavascript%5D&amp;target_type=posts" rel="tag">javascript</a></li>
+</ul>
+<button class="btn btn_outline_grey btn_mini hidden js-fav-edit-link" data-id="344270" data-type="2" onclick="show_edit_tags(this)" type="button">Добавить метки</button>
+</dd>
+</dl>
+</div>
+</article>, <article class="post post_full" id="post_344278">
+<div class="post__wrapper">
+<header class="post__meta">
+<a class="post__user-info user-info" href="https://habrahabr.ru/users/Ktator/" title="Автор публикации">
+<span class="default-image_mini default-image_blue">
+<svg aria-hidden="true" class="icon-svg" height="24" role="img" version="1.1" viewbox="0 0 24 24" width="24"><path d="M21.5 24h-19c-1.379 0-2.5-1.122-2.5-2.5v-19c0-1.379 1.122-2.5 2.5-2.5h19c1.379 0 2.5 1.122 2.5 2.5v19c0 1.379-1.122 2.5-2.5 2.5zm-19-23c-.827 0-1.5.673-1.5 1.5v19c0 .827.673 1.5 1.5 1.5h19c.827 0 1.5-.673 1.5-1.5v-19c0-.827-.673-1.5-1.5-1.5h-19zM15.598 12.385zM19.438 15.417l-.002-.005v-.001c-.875-2.226-2.484-3.054-3.445-3.549l-.273-.143c.029-.497-.025-1.034-.167-1.599l-.128.032.123-.044c-.765-2.152-1.757-2.585-2.632-2.967l-.006-.003-.535-2.121c.357-.065.628-.375.628-.752.001-.423-.342-.765-.765-.765s-.766.342-.766.765c0 .358.248.657.581.74l-.825 1.654-.014-.003-.024-.003c-1.053-.033-1.842.369-2.5.947-.633-.322-1.515-.729-2.158-1.814.107-.12.174-.276.174-.45 0-.375-.303-.678-.678-.678s-.678.303-.678.678.303.678.678.678l.221-.04c.416.597 1.09 1.181 1.347 2.828l-.072.091.104.081-.112-.067c-1.157 1.914-.793 4.248.207 5.37-.998 2.546-1.035 4.681-.097 5.868l.002.002.003.003c.119.162.313.233.524.233.189 0 .39-.057.559-.154.312-.179.441-.459.326-.713l-.12.054.119-.056c-.581-1.243-.474-2.713.314-4.37.4.131.778.208 1.145.234l.139.73c.264 1.418.514 2.757 1.297 4.006.132.264.453.387.777.387.122 0 .245-.018.357-.051.385-.116.591-.399.537-.738l-.129.021.125-.042c-.204-.606-.431-1.146-.649-1.67-.373-.894-.725-1.742-.891-2.737.407-.042.797-.129 1.161-.261.825.692 1.661 1.492 2.743 3.406h.001c.072.14.224.215.41.215.105 0 .222-.024.339-.073.365-.155.652-.531.477-1.006v-.001c-.432-1.849-1.426-2.778-2.428-3.547.162-.175.311-.366.442-.576.75.399 1.878 1.005 3.127 2.766l.047.067.011-.008c.151.156.317.24.48.24.096 0 .191-.027.279-.084.306-.194.439-.662.29-1.005zm-8.878-2.493c-.947 0-1.713-.767-1.713-1.713s.767-1.713 1.713-1.713c.947 0 1.713.767 1.713 1.713s-.767 1.713-1.713 1.713zm6.587 4.648l-.084.021v-.001l.084-.02zm-2.007-5.312zm.022 1.006zM11.225 11.604c0 .385-.312.697-.697.697s-.697-.312-.697-.697c0-.385.312-.697.697-.697s.697.312.697.697z"></path></svg>
+</span>
+<span class="user-info__nickname user-info__nickname_small">Ktator</span>
+</a>
+<span class="post__time">сегодня в 07:06</span>
+</header>
+<h1 class="post__title post__title_full">
+<span class="post__title-text">Местоопределение Wi-FI источников в AR и котелок</span>
+</h1>
+<ul class="post__hubs post__hubs_full-post inline-list">
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/arvrdev/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Разработка под AR и VR'); }" title="Вы не подписаны на этот хаб">Разработка под AR и VR</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/mobile_dev/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Разработка мобильных приложений'); }" title="Вы не подписаны на этот хаб">Разработка мобильных приложений</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/iot_dev/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Разработка для интернета вещей'); }" title="Вы не подписаны на этот хаб">Разработка для интернета вещей</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/infosecurity/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Информационная безопасность'); }" title="Вы не подписаны на этот хаб">Информационная безопасность</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/algorithms/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Алгоритмы'); }" title="Вы не подписаны на этот хаб">Алгоритмы</a>
+</li>
+</ul>
+<ul class="post__marks inline-list"><li class="inline-list__item inline-list__item_post-type"><span class="post__type-label" title="Обучающий материал">Tutorial</span></li></ul>
+<div class="post__body post__body_full">
+<div class="post__text post__text-html js-mediator-article"><p><img src="https://habrastorage.org/webt/aw/3g/wu/aw3gwu4etxlchpwvutan_wadvwo.jpeg"/><br/>
+</p><br/>
+
+Мы уже подсвечивали пеленги Wi-Fi точек в <a href="https://habrahabr.ru/post/339586/">дополненной реальности</a>, сегодня поговорим об их местоопределении.<br/>
+<br/>
+
+Кому интересны технические подробности и при чём тут котелок, добро пожаловать под кат.<br/>
+
+Также вашему вниманию предлагается фото- и видеоотчет о том, что получилось.<a name="habracut"></a><br/>
+<br/>
+<h2 id="postanovka-zadachi">Постановка задачи</h2><br/>
+<p>Есть пеленгатор Wi-Fi точек доступа, описанный <a href="https://habrahabr.ru/post/323638/">здесь</a>, и устройство дополненной реальности. Требуется подсветить местоположение заданной Wi-Fi точки.</p><br/>
+<p>Кратко напомню, что пеленгатор работает по принципу холодно-горячо: показывает насколько хорошо мы нацелились на объект. </p><br/>
+<h2 id="problema">Проблема</h2><br/>
+<p>Для того, чтобы определить местоположение источника сигнала, требуется пересечь несколько лучей-пеленгов, желательно из разных позиций. И тут начинаются проблемы. При чём, проблемы начинаются даже в двумерном случае (когда мы хотим местоопределять на карте): три и больше лучей ну никак не хотят пересекаться в одной точке. </p><br/>
+<p>А в нашем случае даже два луча не хотят пересекаться. </p><br/>
+<h2 id="reshenie">Решение</h2><br/>
+<p>Итак, точного решения у нас не получится. Придётся искать приближённое.<br/>
+
+Базовый алгоритм основан на разбиении пространства на кубики. Для каждого кубика мы будем <del>хоронить</del> хранить, сколько лучей через него прошло. Несколько самых популярных кубиков нарисуем. Мне больше нравятся шары, поэтому я буду рисовать описанный вокруг куба шар.</p><br/>
+<p>Так как у нас лучей относительно мало, то предвидятся сильно разреженные данные, поэтому будем их хранить в хеш-таблице. В качестве ключа у нас будет пара координат кубика, а в качестве значения — число прошедших лучей.</p><br/>
+<p>Каждый пеленг имеет координаты начала (местоположение пеленгатора) и направление. Ввиду ограничений суровой реальности, мы, разумеется, пересекаем не лучи, а отрезки. Мало того, что мы ограничены памятью компьютера, так ещё и не можем засечь Wi-Fi точки на бесконечном удалении от нас :(</p><br/>
+<p>Для того, чтобы отметить кубики, в компьютерной графике есть <a href="https://habrahabr.ru/post/248153/">алгоритм Брезенхэма</a>. Правда, экраны сейчас пока только двумерные, поэтому везде описан алгоритм Брезенхэма на плоскости, но ничего, адаптируем для 3D.</p><br/>
+<p>Прежде, чем читать про реализацию, посмотрите видео, как это работает:</p><br/>
+<div class="oembed"><div><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.2493%;"><iframe allowfullscreen="" scrolling="no" src="https://www.youtube.com/embed/dYjkqGfE280?rel=0&amp;showinfo=1" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;"></iframe></div></div></div><br/>
+<p>Камера, к сожалению, не хотела фокусироваться на телефоне, но при желании можно увидеть, что название точки, которую мы ищем и найденной совпадают.</p><br/>
+<h2 id="realizaciya">Реализация</h2><br/>
+<div class="spoiler"><b class="spoiler_title">При чём же тут котелок?</b><div class="spoiler_text"><p>Легенда гласит, что когда яхта Петра I впервые подошла к берегам острова Котлин, охранявшие его шведские солдаты дали стрекача так быстро, что оставили после себя горящий костёр, на котором в котле готовилась еда. И именно из-за этого происшествия остров получил своё название.</p></div></div><br/>
+<p>Среди массовых устройств дополненной реальности, по прежнему, самые точные и доступные — это устройства на базе <a href="https://get.google.com/tango/">Google Tango</a>. Поэтому, будем использовать их.</p><br/>
+<h3 id="podgotovka-dannyh">Подготовка данных</h3><br/>
+<p>На вход нам подаётся текущая "<a href="https://developers.google.com/tango/overview/poses">поза</a>" Tango устройства и событие, что в данный момент устройство с некоторой точностью направлено на источник сигнала. Для алгоритма Брезенхэма требуется получить начало и конец отрезка.</p><br/>
+<p>Но перед тем, как начать искать конец отрезка, посмотрим, получится ли найти заранее неизвестную Wi-Fi точку?</p><br/>
+<div class="oembed"><div><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.2493%;"><iframe allowfullscreen="" scrolling="no" src="https://www.youtube.com/embed/SF4fazkuV_I?rel=0&amp;showinfo=1" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;"></iframe></div></div></div><br/>
+<p>Для того, чтобы получить конец отрезка, требуется к <em>z</em>-компоненте точки начала прибавить его длину, а затем повернуть. Почему к <em>z</em>? Потому что в данной системе координат <em>z</em> — это "вперёд". </p><br/>
+<div class="spoiler"><b class="spoiler_title">Получение конца отрезка</b><div class="spoiler_text"><pre><code class="java">    private float[] calcSagittaEnd(float[] start, float[] rotateMatrix) {
+        float[] end = new float[4];
+        System.arraycopy(start, 0, end, 0, 3);
+        end[3] = 0f;
+        end[2] += BEARING_LENGTH;
+
+        Matrix.multiplyMV(end, 0, rotateMatrix, 0, end, 0);
+        return end;
+    }</code></pre></div></div><br/>
+<p>Матрицу поворота мы берём из библиотеки Tango:</p><br/>
+<div class="spoiler"><b class="spoiler_title">Получение матрицы поворота</b><div class="spoiler_text"><pre><code class="java">    public boolean addBearing() {
+        /// area -&gt; camera
+        TangoPoseData startPose = TangoSupport.getPoseAtTime(
+                mRgbTimestampGlThread,
+                TangoPoseData.COORDINATE_FRAME_AREA_DESCRIPTION,
+                TangoPoseData.COORDINATE_FRAME_CAMERA_COLOR,
+                TangoSupport.TANGO_SUPPORT_ENGINE_OPENGL,
+                0);
+
+        if (startPose.statusCode == TangoPoseData.POSE_VALID) {
+
+            float[] end = new float[4];
+            float[] start = new float[4];
+
+            start[0] = (float) startPose.translation[0];
+            start[1] = (float) startPose.translation[1];
+            start[2] = (float) startPose.translation[2];
+            start[3] = 0.0f;
+
+            TangoPointCloudData pointCloud = 
+                mPointCloudManager.getLatestPointCloud();
+
+            if (pointCloud == null) {
+                return true; //Пеленга не будет: устройство плохо понимает, где находится.
+            }
+
+            // Мы должны посчитать преобразование между цветной камерой в момент получения пеленга и последними данными камеры глубины
+            TangoPoseData colorTdepthPose = 
+                TangoSupport.calculateRelativePose(
+                    mRgbTimestampGlThread,
+                    TangoPoseData.COORDINATE_FRAME_CAMERA_COLOR,
+                    pointCloud.timestamp,
+                    TangoPoseData.COORDINATE_FRAME_CAMERA_DEPTH);
+
+            if (colorTdepthPose.statusCode == TangoPoseData.POSE_VALID) {
+
+                // Переходим к матрицам в OpenGL сцене
+                TangoSupport.TangoMatrixTransformData depthTarea =
+                        TangoSupport.getMatrixTransformAtTime(
+                            pointCloud.timestamp,
+                            TangoPoseData.COORDINATE_FRAME_START_OF_SERVICE,
+                            TangoPoseData.COORDINATE_FRAME_CAMERA_DEPTH,
+                            TangoSupport.TANGO_SUPPORT_ENGINE_OPENGL,
+                            TangoSupport.TANGO_SUPPORT_ENGINE_TANGO,
+                            0);
+
+                if (depthTarea.statusCode == TangoPoseData.POSE_VALID) {
+
+                    float[] depthTOpenGl = depthTarea.matrix;
+
+                    mRenderer.addBearing(start, depthTOpenGl);
+                    return true;
+                }
+            }
+        }
+        return false; //Пеленга не будет: устройство плохо понимает, где находится.
+    }</code></pre></div></div><br/>
+<p>Самое время посмотреть, как мы находим Wi-Fi точку кафе Шахерезада:</p><br/>
+<div class="oembed"><div><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.2493%;"><iframe allowfullscreen="" scrolling="no" src="https://www.youtube.com/embed/RrjYHAjVS38?rel=0&amp;showinfo=1" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;"></iframe></div></div></div><br/>
+<h3 id="zapolnenie-kubikov">Заполнение кубиков</h3><br/>
+<p>Назначим координатой <em>x</em> ту, на которую самая длинная проекция отрезка нашего пеленга.<br/>
+
+В алгоритме Брезенхэма каждый шаг идёт инкремент координаты <em>x</em>, а координата <em>y</em> увеличивается только если набежала достаточная ошибка. Мы же будем делать то же самое ещё и с координатой <em>z</em>. </p><br/>
+<div class="spoiler"><b class="spoiler_title">Реализация алгоритма Брезенхэма в 3D</b><div class="spoiler_text"><pre><code>    enum class LengthCoord {x, y, z}
+    val space = hashMapOf&lt;Coordinate, Int&gt;()
+
+    private fun markCubes(start: Coordinate, end: Coordinate, lengthCoord: LengthCoord) {
+        //Назначим координатой x ту, проекция на которую самая длинная.
+        fun getX(vertex: Coordinate) = when(lengthCoord) {
+            LengthCoord.x -&gt; vertex.x
+            LengthCoord.y -&gt; vertex.y
+            LengthCoord.z -&gt; vertex.z
+        }
+        fun getY(vertex: Coordinate) = when(lengthCoord) {
+            LengthCoord.x -&gt; vertex.y
+            LengthCoord.y -&gt; vertex.x
+            LengthCoord.z -&gt; vertex.y
+        }
+        fun getZ(vertex: Coordinate) = when(lengthCoord) {
+            LengthCoord.x -&gt; vertex.z
+            LengthCoord.y -&gt; vertex.z
+            LengthCoord.z -&gt; vertex.x
+        }
+        fun setXYZ(x: Int, y: Int, z: Int, lengthCoord: LengthCoord): Coordinate =
+                when(lengthCoord) {
+                    LengthCoord.x -&gt; Coordinate(x, y, z)
+                    LengthCoord.y -&gt; Coordinate(y, x, z)
+                    LengthCoord.z -&gt; Coordinate(z, y, x)
+                }
+
+        val dx = when {
+            getX(end) &gt; getX(start) -&gt; 1
+            getX(end) &lt; getX(start) -&gt; -1
+            else -&gt; 0
+        }
+
+        val dy = when {
+            getY(end) &gt; getY(start) -&gt; 1
+            getY(end) &lt; getY(start) -&gt; -1
+            else -&gt; 0
+        }
+
+        val dz = when {
+            getZ(end) &gt; getZ(start) -&gt; 1
+            getZ(end) &lt; getZ(start) -&gt; -1
+            else -&gt; 0
+        }
+
+        val d = arrayOf(Math.abs(getX(start) - getX(end)), Math.abs(getY(start) - getY(end)), Math.abs(getZ(start) - getZ(end)))
+        var x = getX(start)
+        var y = getY(start)
+        var z = getZ(start)
+
+        var errY = d[0] / 2
+        var errZ = d[0] / 2
+        while (x != getX(end)) {
+            x += dx
+            errY -= d[1]
+            errZ -= d[2]
+            if (errY &lt; 0) {
+                y += dy
+                errY += d[0]
+            }
+            if (errZ &lt; 0) {
+                z += dz
+                errZ += d[0]
+            }
+            addPoint(setXYZ(x, y, z, lengthCoord)) //Мы не хотим добавлять самый первый куб
+        }
+        addPoint(setXYZ(x, y, z, lengthCoord))
+    }</code></pre></div></div><br/>
+<p>Функция addPoint, которая увеличивает счётчик проходящих через куб лучей:</p><br/>
+<div class="spoiler"><b class="spoiler_title">fun addPoint</b><div class="spoiler_text"><pre><code>    private fun addPoint(coord: Coordinate) {
+        lock.withLock{
+            var v = space[coord]
+            if (v != null) {
+                v++
+                space[coord] = v.toInt()
+            } else {
+                space[coord] = 1
+            }
+        }
+    }</code></pre></div></div><br/>
+<p>Выбираем самые популярные кубики: сортируем, а затем берём первые несколько. В текущей реализации не более трёх.<br/>
+</p><br/>
+<img src="https://habrastorage.org/webt/8p/jp/kk/8pjpkk03snyphgal6_qpsamuhzu.jpeg"/><br/>
+<div class="spoiler"><b class="spoiler_title">Получаем пересечение</b><div class="spoiler_text"><pre><code>    fun getIntersection(): List&lt;Array&lt;Float&gt;&gt; {
+        val resCandidates = ArrayList&lt;Pair&lt;Array&lt;Float&gt;, Int&gt;&gt;()
+        lock.withLock {
+            // Выбираем все кубики, через которые проходили лучи.
+            for ((coord, counter) in space) {
+                if (counter &gt;= showThreshold) {
+                    resCandidates.add(Pair(scaleCoordinate(arrayOf(
+                        coord.x.toFloat(), 
+                        coord.y.toFloat(), 
+                        coord.z.toFloat())), 
+                        counter))
+                }
+            }
+        }
+
+        resCandidates.sortBy { item -&gt; -item.second } // Сортируем по убыванию.
+
+        // Выбираем первые несколько элементов
+        return  resCandidates.subList(0, minOf(
+                amountCellsToShow, 
+                resCandidates.size)
+            ).map { elem -&gt; elem.first } 
+    }</code></pre></div></div><br/>
+<h2 id="zaklyuchenie">Заключение</h2><br/>
+<p>Был рассмотрен подход к решению задачи пространственного местоопределения объекта по заданным пеленгам и предложена его реализация.</p><br/>
+<p>Весь исходный код доступен на <a href="https://github.com/xnzr/xnzr-tango">GitHub</a>.</p><br/>
+<p>Конструктивная критика от мастеров Котлина (и не только Котлина) приветствуется.</p><br/>
+<p>Спасибо за внимание!</p></div>
+<script data-counter="2820404" id="js-mpf-mediator-init">!function(e){function t(t,n){if(!(n in e)){for(var r,a=e.document,i=a.scripts,o=i.length;o--;)if(-1!==i[o].src.indexOf(t)){r=i[o];break}if(!r){r=a.createElement("script"),r.type="text/javascript",r.async=!0,r.defer=!0,r.src=t,r.charset="UTF-8";;var d=function(){var e=a.getElementsByTagName("script")[0];e.parentNode.insertBefore(r,e)};"[object Opera]"==e.opera?a.addEventListener?a.addEventListener("DOMContentLoaded",d,!1):e.attachEvent("onload",d):d()} } }t("//top-fwz1.mail.ru/js/code.js","_tmr"),t("//mediator.imgsmail.ru/2/mpf-mediator.min.js","_mediator")}(window);</script>
+</div>
+<dl class="post__tags">
+<dt class="post__tags-label">Метки:</dt>
+<dd class="post__tags-list"> <ul class="inline-list inline-list_fav-tags js-post-tags">
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5BAR%5D&amp;target_type=posts" rel="tag">AR</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%B4%D0%BE%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%BD%D0%B0%D1%8F%20%D1%80%D0%B5%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D1%8C%5D&amp;target_type=posts" rel="tag">дополненная реальность</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%BF%D0%B5%D0%BB%D0%B5%D0%BD%D0%B3%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%5D&amp;target_type=posts" rel="tag">пеленгование</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%BC%D0%B5%D1%81%D1%82%D0%BE%D0%BE%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%5D&amp;target_type=posts" rel="tag">местоопределение</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bwi-fi%5D&amp;target_type=posts" rel="tag">wi-fi</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bjava%5D&amp;target_type=posts" rel="tag">java</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bkotlin%5D&amp;target_type=posts" rel="tag">kotlin</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bandroid%20development%5D&amp;target_type=posts" rel="tag">android development</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bgoogle%20tango%5D&amp;target_type=posts" rel="tag">google tango</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bmobile%20development%5D&amp;target_type=posts" rel="tag">mobile development</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bopen%20source%5D&amp;target_type=posts" rel="tag">open source</a></li>
+</ul>
+<button class="btn btn_outline_grey btn_mini hidden js-fav-edit-link" data-id="344278" data-type="2" onclick="show_edit_tags(this)" type="button">Добавить метки</button>
+</dd>
+</dl>
+</div>
+</article>, <article class="post post_full" id="post_344288">
+<div class="post__wrapper">
+<header class="post__meta">
+<a class="post__user-info user-info" href="https://habrahabr.ru/users/Kiselioff/" title="Автор публикации">
+<img class="user-info__image-pic user-info__image-pic_small" height="24" src="//habrastorage.org/getpro/habr/avatars/1fc/43a/163/1fc43a163e58783c36698d662b11db36.jpg" width="24"/>
+<span class="user-info__nickname user-info__nickname_small">Kiselioff</span>
+</a>
+<span class="post__time">сегодня в 15:18</span>
+</header>
+<h1 class="post__title post__title_full">
+<span class="post__title-text">Arrays, Collections: Алгоритмический минимум</span>
+</h1>
+<ul class="post__hubs post__hubs_full-post inline-list">
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/algorithms/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Алгоритмы'); }" title="Вы не подписаны на этот хаб">Алгоритмы</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/java/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Java'); }" title="Вы не подписаны на этот хаб">Java</a>
+</li>
+</ul>
+<ul class="post__marks inline-list"><li class="inline-list__item inline-list__item_post-type"><a class="post__type-label" href="/sandbox/" title="Перейти в песочницу">Из песочницы</a></li></ul>
+<div class="post__body post__body_full">
+<div class="post__text post__text-html js-mediator-article"><h1>Arrays, Collections: Алгоритмический минимум</h1><br/>
+<h3>Массивы и списки</h3><br/>
+
+Недавно на собеседовании в крупную компанию на должность Java разработчика меня попросили реализовать стандартный алгоритм сортировки. Поскольку я никогда не реализовывал самописные алгоритмы сортировки, а пользовался всегда готовыми решениями, у меня возникли затруднения с реализацией. После собеседования я решил разобраться в вопросе и подготовить список основных алгоритмов сортировки и поиска, которые используются в стандартном пакете java — Java Collections Framework (JCF). Для этого я изучил исходники JDK 7.80.<br/>
+<br/>
+
+В самом обобщенном виде результат изучения представлен на рисунке. Подробности — в основном тексте.<br/>
+<br/>
+<img src="https://habrastorage.org/webt/xz/de/ml/xzdemlca_xhqou9xm619ofh9dzu.jpeg"/><br/>
+<br/>
+<i>Рисунок 1. Методы Arrays, Collections и реализуемые ими алгоритмы</i><br/>
+<a name="habracut"></a><br/>
+<br/>
+
+Первое, что поразило меня в алгоритмах, реализованных в Arrays и Collections — то, что их можно буквально по пальцам пересчитать — по большому счету, это два алгоритма сортировки и один алгоритм поиска.<br/>
+<br/>
+
+Второе — то, что сортировка списков «под капотом» использует сортировку массивов.<br/>
+<br/>
+
+Третье — то, что оба алгоритма сортировки портированы с python. <br/>
+<br/>
+
+Алгоритм быстрой сортировки с двумя опорными элементами разработан нашим соотечественником Владимиром Ярославским и реализован на python. Позже он был адаптирован на Java в классе DualPivotQuickSort при содействии Джона Бентли и Джошуа Блоха. <br/>
+<br/>
+
+Алгоритм сортировки слиянием, который является основным для сортировки массивов ссылочных типов, буквально назван по имени своего создателя Tim Peters — TimSort. Этот алгоритм был также адаптирован Джошуа Блохом с алгоритма сортировки списков, реализованном на python Тимом Петерсом.<br/>
+<br/>
+
+Кратко излагая результаты, стоит отметить, что:<br/>
+<br/>
+<ol>
+<li>Можно условно выделить три слоя методов: <br/>
+<ul>
+<li>Методы API</li>
+<li>Методы базовых (основных) алгоритмов</li>
+<li>Методы (блоки) дополнительных алгоритмов</li>
+</ul> </li>
+<li>Основных алгоритмов используется три. Два алгоритма сортировки: быстрая сортировка, сортировка слиянием. Один алгоритм поиска: бинарный поиск.</li>
+<li>Для оптимизации «основные» алгоритмы заменяются на более подходящие в данный момент “дополнительные” алгоритмы (полный список алгоритмов и условий переключения приведен в конце)</li>
+<li>Для определения того, какой из «дополнительных» алгоритмов будет задействован, могут использоваться:<br/>
+<ul>
+<li>сигнатуры методов (типы аргументов, булевы переменные)</li>
+<li>флаги VM</li>
+<li>пороговые значения длины массива/списка, хранящиеся в приватных переменных классов</li>
+</ul></li>
+</ol><br/>
+
+В пакете util для работы с массивами и коллекциями предназначены классы Arrays и Collections соответственно. Как основной сервис, они предоставляют методы для сортировки и поиска. Для совместимости API Collections и API Arrays унифицированы. Пользователю предоставляются статические перегруженные методы sort и binarySearch. Разница заключается в том, что методы Arrays API принимают массивы примитивных и ссылочных типов, в то время как методы sort и binarySearch Collections API принимают только списки. <br/>
+<br/>
+
+Итак, для того, чтобы выяснить, какие основные и дополнительные алгоритмы используются в пакете util, нужно разобрать реализацию 4-х методов из API Collections и API Arrays.<br/>
+<br/>
+
+Таблица 1. API Arrays vs API Collections<br/>
+<table>
+<tr>
+<th>Метод</th>
+<th>Arrays API</th>
+<th>Collections API</th>
+</tr>
+<tr>
+<td>Sort method</td>
+<td align="center">Arrays.sort</td>
+<td align="center">Collections.sort</td>
+</tr>
+<tr>
+<td>Search method</td>
+<td align="center">Arrays.binarySearch</td>
+<td align="center">Collections.binarySearch</td>
+</tr>
+</table><br/>
+<h5>Arrays.sort</h5><br/>
+<h6><i>Массивы примитивных типов</i></h6><br/>
+
+Основной алгоритм сортировки для массивов примитивных типов в Arrays — <i>быстрая сортировка</i>. Для реализации этой сортировки выделен финальный класс DualPivotQuickSort, который предоставляет публичные методы sort для сортировки массивов всех примитивных типов данных. Методы Arrays API вызывают эти методы и пробрасывают в них ссылку на массив. Если требуется отсортировать определенный диапазон массива, то передаются еще и индексы начала и конца диапазона.<br/>
+<br/>
+
+Временная сложность алгоритма быстрой сортировки в лучшем случае и в среднем случае составляет O(n log n). В некоторых случаях (например, на малых массивах) алгоритм быстрой сортировки обладает не лучшей производительностью, деградирует до квадратичной сложности. Поэтому имеет смысл вместо него применять другие алгоритмы, которые в общем случае проигрывают, но в конкретных случаях могут дать выигрыш. В качестве дополнительных алгоритмов были выбраны с<i>ортировка вставками, “обычная” быстрая сортировка</i> (с одной опорной точкой), <i>сортировка подсчетом</i>. <br/>
+<br/>
+
+Инженеры Oracle эмпирическим путем вычислили оптимальные размерности массивов для задействования каждого дополнительного алгоритма сортировки. Эти значения записаны в приватных полях класса DualPivotQuickSort. Для наглядности я свел их в таблицу 2. <br/>
+<br/>
+
+Таблица 2. Дополнительные алгоритмы в DualPivotQuickSort.sort<br/>
+<table>
+<tr>
+<th>Типы данных</th>
+<th>Размер массива, n</th>
+<th>Предпочитаемый алгоритм</th>
+<th>Временная сложность в лучшем случае</th>
+</tr>
+<tr>
+<td>int, long, short, char, float, double</td>
+<td align="center">n &lt; 47</td>
+<td align="center">insertion sort,<br/>
+
+pair insertion sort</td>
+<td align="center">O(n)</td>
+</tr>
+<tr>
+<td>int, long, short, char, float, double</td>
+<td align="center">n &lt; 286</td>
+<td align="center">quick sort</td>
+<td align="center">O(n log n)</td>
+</tr>
+<tr>
+<td>byte</td>
+<td align="center">29 &lt; n</td>
+<td align="center">counting sort</td>
+<td align="center">O(n+k)</td>
+</tr>
+<tr>
+<td>short, char</td>
+<td align="center">3200 &lt; n</td>
+<td align="center">counting sort</td>
+<td align="center">O(n+k)</td>
+</tr>
+</table><br/>
+
+В теле методов DualPivotQuickSort.sort производятся проверки на длину массива, и в зависимости от результата применяется либо основной, либо дополнительный алгоритм. <br/>
+<br/>
+<h6><i>Массивы примитивных типов. Выбор алгоритма и булев параметр leftmost</i></h6><br/>
+
+Параметр leftmost при необходимости передается в метод sort и показывает, является ли указанная часть самой левой в диапазоне. Если да, то применяется алгоритм “обычной” сортировки вставками. Если нет, то применяется парная сортировка вставками.<br/>
+<br/>
+
+Еще одно объяснение о выборе дополнительных алгоритмов можно почитать <br/>
+<a href="https://stackoverflow.com/a/36676801">здесь</a>. <br/>
+<br/>
+<h6><i>Массивы ссылочных типов</i></h6><br/>
+
+Для массивов ссылочных типов в качестве основного предусмотрен алгоритм сортировки слиянием, он реализован в трех вариациях. Две актуальные реализации вынесены в специальные классы: TimSort, ComparableTimSort. TimSort предназначена для сортировки объектов с использованием компараторов. ComparableTimSort — это версия TimSort, предназначенная для сортировки объектов, поддерживающих Comparable. Подробности реализации сортировки TimSort смотрите в <a href="https://habrahabr.ru/company/infopulse/blog/133303/">посте на хабре</a>.<br/>
+<br/>
+
+Класс TimSort содержит единственную пороговую величину, при сравнении с которой принимается решение о переключении на дополнительный алгоритм. Это величина называется MIN_MERGE и хранит минимальную длину массива, при которой будет производиться сортировка слиянием. Если же длина массива будет меньше MIN_MERGE, т.е. 32, то будет задействована бинарная сортировка вставками. Как сказано в документации, это мини-TimSort, т.е. без использования слияний.<br/>
+<br/>
+
+Таблица 3. Дополнительные алгоритмы в TimSort.sort и ComparableTimSort.sort<br/>
+<table>
+<tr>
+<th>Тип данных</th>
+<th>Размер массива, n</th>
+<th>Предпочитаемый алгоритм</th>
+<th>Временная сложность в лучшем случае</th>
+</tr>
+<tr>
+<td align="center">T[]</td>
+<td align="center"> n &lt; 32</td>
+<td align="center">binary insertion sort</td>
+<td align="center">O(n)</td>
+</tr>
+</table><br/>
+
+Третья реализация сортировки слиянием является legacy и оставлена для сохранения обратной совместимости с версией JDK 1.6 и более ранними. Legacy сортировка обернута в метод legacyMergeSort и непосредственно реализована в методе Arrays.mergeSort. Для того, чтобы ее использовать, необходимо выставить флаг -Djava.util.Arrays.useLegacyMergeSort=true перед запуском виртуальной машины. Для хранения значения этой переменной в Arrays имеется внутренний статический класс LegacyMergeSort (см. Листинг. 1). <br/>
+<br/>
+
+Листинг 1. Статический внутренний класс LegacyMergeSort в Arrays<br/>
+<br/>
+<pre><code class="java">static final class LegacyMergeSort {
+   private static final boolean userRequested =
+       java.security.AccessController.doPrivileged(
+           new sun.security.action.GetBooleanAction(
+               "java.util.Arrays.useLegacyMergeSort")).booleanValue();
+}
+</code></pre><br/>
+
+При вызове Arrays.sort с массивом ссылочного типа происходит проверка, выставлен ли флаг на применение legacy сортировки. Тогда происходит вызов либо legacy сортировки, либо одной из базовых (см. Листинг 2).<br/>
+<br/>
+
+Листинг 2. Реализация метода Arrays.sort для массива ссылочного типа с компаратором<br/>
+<br/>
+<pre><code class="java">public static &lt;T&gt; void sort(T[] a, Comparator&lt;? super T&gt; c) {
+   if (LegacyMergeSort.userRequested)
+       legacyMergeSort(a, c);
+   else
+       TimSort.sort(a, c);
+}
+</code></pre><br/>
+<h5>Arrays.binarySearch</h5><br/>
+
+Для массивов как примитивных, так и ссылочных типов предусмотрен бинарный поиск. Перед поиском массив должен быть отсортирован. Сложность алгоритма бинарного поиска в среднем и в худшем случае составляет O(log n). Дополнительных алгоритмов не предусмотрено.<br/>
+<br/>
+<h5>Collections.sort</h5><br/>
+
+В Collections сортировка предусмотрена только для списков. Интересно, что сначала производится преобразование списка в массив с последующим применением сортировки слиянием для массивов ссылочных типов. Сортировка осуществляется вызовом метода Arrays.sort. <br/>
+<br/>
+<h5>Collections.binarySearch</h5><br/>
+
+Как и в случае с сортировкой, в Collections бинарный поиск реализован только для списков. Переменная BINARYSEARCH_THRESHOLD устанавливает ограничение на размер списка в 5000 элементов. Так что если вам необходимо провести поиск на более внушительной выборке, придется подумать, как это лучше сделать.<br/>
+<br/>
+
+Списки поддерживают либо произвольный доступ, либо <a href="https://en.wikipedia.org/wiki/Sequential_access">последовательный</a>. Если список поддерживает произвольный доступ, то он будет обрабатываться алгоритмом <i>индексированного бинарного поиска</i>. Если список поддерживает последовательный доступ, то он будет обрабатываться алгоритмом <i>итеративного бинарного поиска</i>. Как видно, и в том, и в другом случае будет применяться бинарный поиск.<br/>
+<br/>
+
+Всего интерфейс List в JDK 7.8 реализуют 10 классов, 2 из которых — абстрактные AbstractList и AbstractSequentialList. Последовательный доступ реализует только LinkedList и все потомки AbstractSequentialList. Поэтому они будут обрабатываться алгоритмом iteratorBinarySearch. Остальные списки, такие как ArrayList, CopyOnWriteArrayList, будут обрабатываться алгоритмом indexedBinarySearch. <br/>
+<br/>
+<h3>Обобщаем изученное</h3><br/>
+
+Теперь, когда рассмотрены основные методы и условия перехода к дополнительным методам, можно обобщить полученные данные. Для максимальной наглядности детализируем рисунок 1, выделив на нем основные методы и добавим условия перехода к дополнительным методам. <br/>
+<br/>
+<img src="https://habrastorage.org/webt/zm/zw/on/zmzwonychkr4oi8sxed8anrjnvm.jpeg"/><br/>
+<br/>
+<i>Рисунок 2. Основные и дополнительные алгоритмы Arrays, Collections</i><br/>
+<br/>
+
+Пояснения к цифрам на стрелках рисунка 2 содержатся в Сводной таблице. Цифры обозначают условия перехода. Серым выделены основные алгоритмы. Они применяются по умолчанию. В Сводной таблице строки, описывающие основные алгоритмы, выделены темно-серым.<br/>
+<br/>
+<img src="https://habrastorage.org/webt/uq/bp/zi/uqbpziunoa4gah3jrric7qfig0w.jpeg"/><br/>
+<br/>
+<h3>Заключение</h3><br/>
+
+Целью заметки было составить полный список алгоритмов, применяющихся для поиска и сортировки массивов и списков в пакете java.util. Итак, для того, чтобы в полной мере понимать, что происходит “под капотом” при использовании API Arrays и API Collections достаточно владеть следующими алгоритмами:<br/>
+<br/>
+<ol>
+<li>быстрая сортировка с двумя опорными точками</li>
+<li>быстрая сортировка с одной опорной точкой</li>
+<li>сортировка подсчетом</li>
+<li>«простая» сортировка вставками</li>
+<li>бинарная сортировка вставками</li>
+<li>парная сортировка вставками</li>
+<li>сортировка слиянием (версия Тима Петерса)</li>
+<li>бинарный поиск</li>
+<li>индексированный бинарный поиск</li>
+<li>итеративный бинарный поиск</li>
+</ol><br/>
+
+Разбор алгоритмов и их свойств вы можете найти по ссылкам:<br/>
+<br/>
+<ol>
+<li> <a href="http://tutorials.jenkov.com/java-collections/sorting.html">Про сортировку списков</a></li>
+<li> <a href="https://stackoverflow.com/a/36676801">Алгоритмы при обработке массивов в Arrays</a></li>
+<li> <a href="https://habrahabr.ru/post/188010/">Знай сложности алгоритмов</a></li>
+<li> <a href="https://habrahabr.ru/company/infopulse/blog/133303/">Алгоритм сортировки Timsort</a></li>
+<li> <a href="https://habrahabr.ru/post/221055/">Алгоритмы сортировки в виде пошаговой анимации</a></li>
+<li> <a href="https://en.wikipedia.org/wiki/Sequential_access">Последовательный и произвольный доступ</a></li>
+</ol></div>
+<script data-counter="2820404" id="js-mpf-mediator-init">!function(e){function t(t,n){if(!(n in e)){for(var r,a=e.document,i=a.scripts,o=i.length;o--;)if(-1!==i[o].src.indexOf(t)){r=i[o];break}if(!r){r=a.createElement("script"),r.type="text/javascript",r.async=!0,r.defer=!0,r.src=t,r.charset="UTF-8";;var d=function(){var e=a.getElementsByTagName("script")[0];e.parentNode.insertBefore(r,e)};"[object Opera]"==e.opera?a.addEventListener?a.addEventListener("DOMContentLoaded",d,!1):e.attachEvent("onload",d):d()} } }t("//top-fwz1.mail.ru/js/code.js","_tmr"),t("//mediator.imgsmail.ru/2/mpf-mediator.min.js","_mediator")}(window);</script>
+</div>
+<dl class="post__tags">
+<dt class="post__tags-label">Метки:</dt>
+<dd class="post__tags-list"> <ul class="inline-list inline-list_fav-tags js-post-tags">
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC%D1%8B%20%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B8%5D&amp;target_type=posts" rel="tag">алгоритмы сортировки</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC%D1%8B%20%D0%BF%D0%BE%D0%B8%D1%81%D0%BA%D0%B0%5D&amp;target_type=posts" rel="tag">алгоритмы поиска</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bjava%20core%5D&amp;target_type=posts" rel="tag">java core</a></li>
+</ul>
+<button class="btn btn_outline_grey btn_mini hidden js-fav-edit-link" data-id="344288" data-type="2" onclick="show_edit_tags(this)" type="button">Добавить метки</button>
+</dd>
+</dl>
+</div>
+</article>, <article class="post post_full" id="post_343840">
+<div class="post__wrapper">
+<header class="post__meta">
+<a class="post__user-info user-info" href="https://habrahabr.ru/users/Rengabim/" title="Автор публикации">
+<span class="default-image_mini default-image_pink">
+<svg aria-hidden="true" class="icon-svg" height="24" role="img" version="1.1" viewbox="0 0 24 24" width="24"><path d="M21.5 24h-19c-1.379 0-2.5-1.122-2.5-2.5v-19c0-1.379 1.122-2.5 2.5-2.5h19c1.379 0 2.5 1.122 2.5 2.5v19c0 1.379-1.122 2.5-2.5 2.5zm-19-23c-.827 0-1.5.673-1.5 1.5v19c0 .827.673 1.5 1.5 1.5h19c.827 0 1.5-.673 1.5-1.5v-19c0-.827-.673-1.5-1.5-1.5h-19zM15.598 12.385zM19.438 15.417l-.002-.005v-.001c-.875-2.226-2.484-3.054-3.445-3.549l-.273-.143c.029-.497-.025-1.034-.167-1.599l-.128.032.123-.044c-.765-2.152-1.757-2.585-2.632-2.967l-.006-.003-.535-2.121c.357-.065.628-.375.628-.752.001-.423-.342-.765-.765-.765s-.766.342-.766.765c0 .358.248.657.581.74l-.825 1.654-.014-.003-.024-.003c-1.053-.033-1.842.369-2.5.947-.633-.322-1.515-.729-2.158-1.814.107-.12.174-.276.174-.45 0-.375-.303-.678-.678-.678s-.678.303-.678.678.303.678.678.678l.221-.04c.416.597 1.09 1.181 1.347 2.828l-.072.091.104.081-.112-.067c-1.157 1.914-.793 4.248.207 5.37-.998 2.546-1.035 4.681-.097 5.868l.002.002.003.003c.119.162.313.233.524.233.189 0 .39-.057.559-.154.312-.179.441-.459.326-.713l-.12.054.119-.056c-.581-1.243-.474-2.713.314-4.37.4.131.778.208 1.145.234l.139.73c.264 1.418.514 2.757 1.297 4.006.132.264.453.387.777.387.122 0 .245-.018.357-.051.385-.116.591-.399.537-.738l-.129.021.125-.042c-.204-.606-.431-1.146-.649-1.67-.373-.894-.725-1.742-.891-2.737.407-.042.797-.129 1.161-.261.825.692 1.661 1.492 2.743 3.406h.001c.072.14.224.215.41.215.105 0 .222-.024.339-.073.365-.155.652-.531.477-1.006v-.001c-.432-1.849-1.426-2.778-2.428-3.547.162-.175.311-.366.442-.576.75.399 1.878 1.005 3.127 2.766l.047.067.011-.008c.151.156.317.24.48.24.096 0 .191-.027.279-.084.306-.194.439-.662.29-1.005zm-8.878-2.493c-.947 0-1.713-.767-1.713-1.713s.767-1.713 1.713-1.713c.947 0 1.713.767 1.713 1.713s-.767 1.713-1.713 1.713zm6.587 4.648l-.084.021v-.001l.084-.02zm-2.007-5.312zm.022 1.006zM11.225 11.604c0 .385-.312.697-.697.697s-.697-.312-.697-.697c0-.385.312-.697.697-.697s.697.312.697.697z"></path></svg>
+</span>
+<span class="user-info__nickname user-info__nickname_small">Rengabim</span>
+</a>
+<span class="post__time">сегодня в 11:17</span>
+</header>
+<h1 class="post__title post__title_full">
+<span class="post__title-text">Команда разработчиков Renga: как мы достигли идиллии, работая без менеджеров</span>
+</h1>
+<ul class="post__hubs post__hubs_full-post inline-list">
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/dev_management/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Управление разработкой'); }" title="Вы не подписаны на этот хаб">Управление разработкой</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/career/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Карьера в IT-индустрии'); }" title="Вы не подписаны на этот хаб">Карьера в IT-индустрии</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/cad_cam/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'CAD/CAM'); }" title="Вы не подписаны на этот хаб">CAD/CAM</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/agile/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Agile'); }" title="Вы не подписаны на этот хаб">Agile</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/company/ascon/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Блог компании АСКОН'); }" title="Вы не подписаны на этот хаб">Блог компании АСКОН</a>
+</li>
+</ul>
+<ul class="post__marks inline-list"></ul>
+<div class="post__body post__body_full">
+<div class="post__text post__text-html js-mediator-article">7 команд и ни одного менеджера – думаете, такое возможно? Мы построили процесс, в котором показываем на каждом демо по 1-2 фичи от команды, проводим ретро команд, ретро релизов и при этом получаем реальное удовольствие от работы. Хотите организовать свою работу так же? Тогда добро пожаловать под кат.<br/>
+<br/>
+<img src="https://habrastorage.org/webt/c9/es/fy/c9esfyuh41tovncgrrmv5gdnspe.png"/><br/>
+<br/>
+
+Мы, компания <a href="http://rengabim.com/">Renga Software</a>, занимаемся разработкой программных продуктов для проектирования зданий и сооружений в соответствии с технологией информационного моделирования (<abbr title="(Building Information Modeling или Building Information Model) — информационное моделирование здания или информационная модель здания.">BIM</abbr>). Идем спринтами, выпускаем релизы каждые 3-4 месяца. Пользователей системы с каждой неделей становится всё больше. Продукт совсем молодой, поэтому бэклог переполнен важными, а главное, интересными задачами. Но как в короткие сроки разработать продукт, который будет использоваться для проектирования жилых домов, детских садов, больниц и театров?<br/>
+<a name="habracut"></a><br/>
+<div class="spoiler"><b class="spoiler_title">Подробнее о семействе продуктов Renga (Осторожно, маркетинг!)</b><div class="spoiler_text"><a href="http://rengacad.com/ru/renga/architecture/"><b>Renga Architecture</b></a> – система для архитектурно-строительного проектирования. Программа создана для максимальной помощи проектировщику в решении его задач: создание архитектурного облика здания и информационной модели, и быстрая компоновка чертежей согласно стандартам СПДС и многое другое.<br/>
+<br/>
+<a href="http://rengacad.com/ru/renga/structure/"><b>Renga Structure</b></a> — cистема для проектирования конструктивной части зданий/сооружений. Программа для инженеров-конструкторов и проектировщиков по созданию информационной модели здания или сооружения и получению чертежей марок КР/КЖ/КЖИ/КМ/АС.<br/>
+<br/>
+
+Семейство продуктов <b>Renga</b> предназначено для проектирования по технологии BIM. Высокая производительность систем позволяет работать с большими проектами без видимого снижения качества работы с 3D-моделью:<cut></cut><br/>
+<br/>
+<u>Объектное проектирование</u><br/>
+
+Создание в Renga 3D-модели здания/сооружения инструментами объектного проектирования (стена, колонна, окно и т.д.)<br/>
+<br/>
+<u>Коллективная работа</u><br/>
+
+Обмен хранение и управление данными осуществляется с помощью BIM-Server Pilot<br/>
+
+Взаимодействие со сметными системами<br/>
+
+Интеграция Renga посредством API со сметными системами 1С-смета и ABC-смета для взаимодействия проектного и сметного отделов.<br/>
+<br/>
+<u>Обмен данными</u><br/>
+
+Renga позволяет обмениваться данными с другими системами через различные форматы (.ifc, .dwg, .dxf, .obj, .dae, .stl, .3ds, .lwo и .csv)<br/>
+<br/>
+<u>Автоматизация получения спецификаций и ведомостей</u><br/>
+
+В Renga реализована функция получения отчетов для формирования спецификаций, ведомостей и экспликаций.<br/>
+<br/>
+<u>Автоматизация получения чертежей</u><br/>
+
+По данным 3D-модели автоматически получаются виды (фасады, разрезы и планы) и размещаются на чертежах в заданных масштабах. <br/>
+<br/>
+</div></div><br/>
+<img src="https://habrastorage.org/webt/lz/va/kb/lzvakbtgzblbeduwicgilm2i0oo.jpeg"/><br/>
+<br/>
+
+«Пусть лучше падает приложение, чем спроектированное здание»<br/>
+<b> — Шутка архитектора</b><br/>
+<br/>
+
+Итак, наш департамент разработки состоит из 28 разработчиков, 3 продуктовых аналитиков и 6 тестировщиков. Каждая команда включает продуктового аналитика, тестировщика и четырех разработчиков. Мы следуем всем обязательным активностям скрама – спринты, планирование, ретро, демо, ежедневные стендапы. Более того, мы используем некоторые фишки из SAFe (Scaled Agile Framework) для синхронизации работы нескольких команд – еженедельные синхронизации команд, ретро релиза раз в 3-4 месяца. Есть у нас и не совсем обычная активность – мы ее называем груминг (grooming), на которой разбираем бизнесовую фичу вместе со всей командой и аналитиком и получаем список всем понятных требований к фиче и критериев готовности (DoDs).<br/>
+<br/>
+<h3>Грумить или не грумить, вот в чем вопрос</h3><br/>
+
+В классическом скраме, как вы знаете, существует активность “Планирование”, на которой обязательно присутствует продуктовик (product owner), команда разработки, тестировщики и другие заинтересованные (stakeholders). В процессе планирования вырабатывается цель спринта, состав фич или стори (user story) для разработки. Присутствие product owner’а – обязательное условие успешного планирования, ведь только он может ответить на нестандартные вопросы о фиче, которые приходят в голову опытным (и не только) разработчикам при осознании цели фичи и в процессе декомпозиции ее на задачи.<br/>
+<br/>
+
+Здесь кроется первый подводный камень классического скрама – как сделать возможным присутствие продуктовика на планировании 7-ми команд в один день? Может, есть возможность рассинхронизации команд и проведения планирования в разные дни? Получается, что product owner проведет 7 дней из 14, выделенных на спринт, на планированиях. Кроме того, в такой рассинхронизации становится непонятным, как проводить демо, на котором хочется показать интегральный результат работы всех команд?<br/>
+<br/>
+
+Мы решили эту проблему. Планирование проводится только командой. На планировании команда занимается декомпозицей заранее подготовленных и разгрумленных фич, для которых уже сформированы критерии готовности. Таким образом, на планировании каждый в команде (если он/она внимательно слушали и активно участвовали в груминге) знает, что именно нужно сделать в той или иной фиче. Это экономит время product owner’а и позволяет синхронизировать планирование команд и проводить их в один день.<br/>
+<br/>
+
+Особенность нашего скрама заключается как раз в проведении специальных активностей – грумингов фич. На них присутствует product owner, вся команда, которая будет разрабатывать фичу, тестировщики, технические писатели и все заинтересованные. Продуктовик рассказывает, о чем будет фича, как это должно выглядеть и основные сценарии использования. В процессе груминга любой присутствующий может задавать любые вопросы касательно функционала, сценариев использования, краевых условий. Как правило, несмотря на подготовленность фич от product owner’а, постоянно возникает 2-3 ключевых вопроса от присутствующих, которые могут отразиться на аналитике фичи и повлиять на ее конечный вариант. Кроме того, по вопросам, не принципиальным для аналитики, разработчики могут сами принять решение, как именно реализовать тот или иной функционал. Длительность активности зависит от сложности фичи и длится от 30 минут до 5 часов.<br/>
+<br/>
+<img src="https://habrastorage.org/webt/b3/0j/6k/b30j6kkfsee46ctrqnjsjxrbqwm.jpeg"/><br/>
+<br/>
+<i>База знаний формируется, в том числе, из таких настенных записей</i><br/>
+<br/>
+
+Таким образом, получается достаточно дорогая активность по трудозатратам. Но это единственный минус грумингов, плюсы которого очевидны и в значительной степени перевешивают время, затраченное на обсуждение. Некоторые плюсы я уже упоминал, пройдемся по ним еще раз:<br/>
+<br/>
+<ol>
+<li>Нет необходимости присутствовать продуктовому аналитику на планировании всех команд, что позволяет синхронизировать планирование. Груминг же проводится накануне спринта, где планируется работа над фичей, в удобное для всех участников время.</li>
+<li>Вся команда погружена в процесс обсуждения функциональности и тонкостей работы фичи. Это позволяет избежать известного расхождения ожидания и факта реализованного функционала. Кроме этого, коллективное обсуждение выявляет неточности и неоднозначности в изначально сформулированной фиче, выявляет ошибки аналитики за счет неожиданных вопросов присутствующих (а такие вопросы есть почти всегда).</li>
+<li>На выходе формируется полный и понятный всем список требований и сценариев использования фичи. Разработчики будут проверять код по основным моментам функционала, а тестировщики будут писать интеграционные тесты, зная сценарии поведения системы.</li>
+</ol><br/>
+<h3>Сами себе менеджеры</h3><br/>
+
+Спринты разработки у нас длятся десять рабочих дней. Между спринтами есть день для демо и ретро и день для планирования следующего спринта. В результате спринты не привязаны к дням недели, а только к абсолютному количеству рабочих дней.<br/>
+<br/>
+
+У каждой команды есть командный чат в телеграм, который позволяет оперативно обсуждать все вопросы разработки, организации активностей, а также вопросы политики и религии. Проведение ретро, ежедневных стендапов, планирования, как правило, инициируется разными разработчиками, у кого есть время написать в чат. Ответственным за проведение активности может быть любой разработчик, кто пожелает. Назначаем время активности, собираемся командой и обсуждаем. Как правило, в каждой команде есть опытный тимлид, который также обладает хорошими soft skills, что позволяет не уводить обсуждения в сторону. Хотя, в каждой команде soft skills хорошо развиты у большинства разработчиков, что позволяет конструктивно обсуждать вопросы и сводить к минимуму время, затрачиваемое на не конструктивные обсуждения. Результатами большинства обсуждений становятся записи на маркерной доске, фото которой бережно хранятся в архивах чата и в облачном хранилище для истории. <br/>
+<br/>
+<h3>Планирование</h3><br/>
+
+Задачи на планировании оцениваются в абстрактных рабочих часах, которых в рабочем дне мы оптимистично полагаем целых пять. То есть, если на задачу по оценке уйдет день, то мы оцениваем ее в пять часов. Используем для оценок покер планирования. Если оценки расходятся, как правило, это говорит о том, что кто-то из участников знает больше, чем другие. Таким образом, выравнивается понимание контекста задачи и, как следствие, переоценка задачи.<br/>
+<br/>
+
+Почему мы не используем для оценки попугаев или story points? Со временем мы пришли к выводу, что команде важно правильно оценивать скорость разработки, чтобы давать правдоподобные обещания по разработке фич в очередном релизе. Основной критикой оценки в часах является зависимость от опытности разработчика и степени его знакомства с участком кода. В это же время story points позволяют оценивать объем работы без привязки к конкретному разработчику. Но что произойдет, если в очередном спринте задачу в, например, 3 story points возьмет новичок? Он потратит на нее 3 дня, в то время, как опытный управится за 1 день. Таким образом, скоуп спринта перестанет быть привязанным к временным рамкам спринта. Мы же в процессе планирования выравниваем именно время на задачу. Бывает, что опытный разработчик оценивает задачу в два часа, а неопытный – в пять часов. После обсуждения окончательной оценкой скорее всего станет пять часов. Таким образом, мы потенциально завышаем оценку задачи, но зато защищены от невыполнения обязательств по разработке скоупа спринта.<br/>
+<br/>
+
+Помимо декомпозированных задач, для фичи обозначается багпул (bugpool), который также оценивается, в том числе тестировщиком. Смысл его состоит в обозначении степени неопределенности для потенциальных багов в фиче. Кажется, что можно принимать неопределенность всегда за 30-50%. Тем не менее опыт показывает, что неопределенность зависит от контекста самой задачи. Например, баги в задаче, связанной с нетипичным использованием GUI или неизвестной части Qt, наверняка станут головной болью. В это же время фича на расширение известного функционала понятна и предсказуема. Это позволяет нам иметь запас часов в спринте на починку багов, помимо основной оценки времени на разработку.<br/>
+<br/>
+<h3>Ретро</h3><br/>
+
+Закончить рассказ хочется на самой позитивной активности спринта. Ведущий ретро, как правило, выбирается по правилу: кто дольше всех не вел ретро. На ретро мы составляем список позитивных и не очень моментов. Как правило, в части плюсов бывают записи вроде “Показали на демо 3 фичи”, “Починили сложный баг”, “Отметили день рождения команды”. В части минусов встречаются наоборот “Не успели доделать фичу”, “Нашли невоспроизводимый баг”, “Нашли архитектурную проблему”. По каждому минусу, как правило, проходит бурное обсуждение, которое выливается в конструктивные предложения и соответствующие улучшения. Особенно приятно перечитывать предыдущие ретро и видеть, как с каждым спринтом мы не возвращаемся к прежним минусам.<br/>
+<br/>
+<img src="https://habrastorage.org/webt/ml/wl/mb/mlwlmb_zj96t-ehylcbiprb09f0.jpeg"/><br/>
+<br/>
+<i>На каждом ретро настроение отличное, но некоторые минусы бывают очень серьезными: “Даня недостаточно настойчив”</i><br/>
+<br/>
+<h3>На посошок</h3><br/>
+
+На повестке остались не освещенными вопросы проведения синхронизации команд, демо, планирования релиза, ретро релиза. В следующих статьях обязательно расскажу об этом и о многом другом. <br/>
+<br/>
+<a href="https://spb.hh.ru/vacancy/22331775?query=renga">Присоединяйся</a> к нашей команде разработчиков без менеджеров. Попробуй нашу <a href="http://rengabim.com/">BIM-систему</a> – спроектируй дом своей мечты.<cut></cut><br/>
+<br/>
+<a href="https://habrastorage.org/webt/ai/mg/8m/aimg8mps0_9daephy8chlmrqnhc.jpeg"><img src="https://habrastorage.org/webt/ai/mg/8m/aimg8mps0_9daephy8chlmrqnhc.jpeg"/></a> Анатолий Осокин, ведущий инженер-программист, Renga Software.</div>
+<script data-counter="2820404" id="js-mpf-mediator-init">!function(e){function t(t,n){if(!(n in e)){for(var r,a=e.document,i=a.scripts,o=i.length;o--;)if(-1!==i[o].src.indexOf(t)){r=i[o];break}if(!r){r=a.createElement("script"),r.type="text/javascript",r.async=!0,r.defer=!0,r.src=t,r.charset="UTF-8";;var d=function(){var e=a.getElementsByTagName("script")[0];e.parentNode.insertBefore(r,e)};"[object Opera]"==e.opera?a.addEventListener?a.addEventListener("DOMContentLoaded",d,!1):e.attachEvent("onload",d):d()} } }t("//top-fwz1.mail.ru/js/code.js","_tmr"),t("//mediator.imgsmail.ru/2/mpf-mediator.min.js","_mediator")}(window);</script>
+</div>
+<dl class="post__tags">
+<dt class="post__tags-label">Метки:</dt>
+<dd class="post__tags-list"> <ul class="inline-list inline-list_fav-tags js-post-tags">
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bbim%5D&amp;target_type=posts" rel="tag">bim</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bbim-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%5D&amp;target_type=posts" rel="tag">bim-системы</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bscrum%5D&amp;target_type=posts" rel="tag">scrum</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bagile%5D&amp;target_type=posts" rel="tag">agile</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81%20%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B8%5D&amp;target_type=posts" rel="tag">процесс разработки</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D1%80%D0%B5%D1%82%D1%80%D0%BE%5D&amp;target_type=posts" rel="tag">ретро</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bgrooming%5D&amp;target_type=posts" rel="tag">grooming</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bplanning%5D&amp;target_type=posts" rel="tag">planning</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%BF%D0%BB%D0%B0%D0%BD%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%5D&amp;target_type=posts" rel="tag">планирование</a></li>
+</ul>
+<button class="btn btn_outline_grey btn_mini hidden js-fav-edit-link" data-id="343840" data-type="2" onclick="show_edit_tags(this)" type="button">Добавить метки</button>
+</dd>
+</dl>
+</div>
+</article>, <article class="post post_full" id="post_344266">
+<div class="post__wrapper">
+<header class="post__meta">
+<a class="post__user-info user-info" href="https://habrahabr.ru/users/dontspeaker/" title="Автор публикации">
+<span class="default-image_mini default-image_lilac">
+<svg aria-hidden="true" class="icon-svg" height="24" role="img" version="1.1" viewbox="0 0 24 24" width="24"><path d="M21.5 24h-19c-1.379 0-2.5-1.122-2.5-2.5v-19c0-1.379 1.122-2.5 2.5-2.5h19c1.379 0 2.5 1.122 2.5 2.5v19c0 1.379-1.122 2.5-2.5 2.5zm-19-23c-.827 0-1.5.673-1.5 1.5v19c0 .827.673 1.5 1.5 1.5h19c.827 0 1.5-.673 1.5-1.5v-19c0-.827-.673-1.5-1.5-1.5h-19zM15.598 12.385zM19.438 15.417l-.002-.005v-.001c-.875-2.226-2.484-3.054-3.445-3.549l-.273-.143c.029-.497-.025-1.034-.167-1.599l-.128.032.123-.044c-.765-2.152-1.757-2.585-2.632-2.967l-.006-.003-.535-2.121c.357-.065.628-.375.628-.752.001-.423-.342-.765-.765-.765s-.766.342-.766.765c0 .358.248.657.581.74l-.825 1.654-.014-.003-.024-.003c-1.053-.033-1.842.369-2.5.947-.633-.322-1.515-.729-2.158-1.814.107-.12.174-.276.174-.45 0-.375-.303-.678-.678-.678s-.678.303-.678.678.303.678.678.678l.221-.04c.416.597 1.09 1.181 1.347 2.828l-.072.091.104.081-.112-.067c-1.157 1.914-.793 4.248.207 5.37-.998 2.546-1.035 4.681-.097 5.868l.002.002.003.003c.119.162.313.233.524.233.189 0 .39-.057.559-.154.312-.179.441-.459.326-.713l-.12.054.119-.056c-.581-1.243-.474-2.713.314-4.37.4.131.778.208 1.145.234l.139.73c.264 1.418.514 2.757 1.297 4.006.132.264.453.387.777.387.122 0 .245-.018.357-.051.385-.116.591-.399.537-.738l-.129.021.125-.042c-.204-.606-.431-1.146-.649-1.67-.373-.894-.725-1.742-.891-2.737.407-.042.797-.129 1.161-.261.825.692 1.661 1.492 2.743 3.406h.001c.072.14.224.215.41.215.105 0 .222-.024.339-.073.365-.155.652-.531.477-1.006v-.001c-.432-1.849-1.426-2.778-2.428-3.547.162-.175.311-.366.442-.576.75.399 1.878 1.005 3.127 2.766l.047.067.011-.008c.151.156.317.24.48.24.096 0 .191-.027.279-.084.306-.194.439-.662.29-1.005zm-8.878-2.493c-.947 0-1.713-.767-1.713-1.713s.767-1.713 1.713-1.713c.947 0 1.713.767 1.713 1.713s-.767 1.713-1.713 1.713zm6.587 4.648l-.084.021v-.001l.084-.02zm-2.007-5.312zm.022 1.006zM11.225 11.604c0 .385-.312.697-.697.697s-.697-.312-.697-.697c0-.385.312-.697.697-.697s.697.312.697.697z"></path></svg>
+</span>
+<span class="user-info__nickname user-info__nickname_small">dontspeaker</span>
+</a>
+<span class="post__time">сегодня в 11:22</span>
+</header>
+<h1 class="post__title post__title_full">
+<span class="post__title-text">Переход из тестировщика в руководители проектов</span>
+</h1>
+<ul class="post__hubs post__hubs_full-post inline-list">
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/pm/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Управление проектами'); }" title="Вы не подписаны на этот хаб">Управление проектами</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/mobile_testing/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Тестирование мобильных приложений'); }" title="Вы не подписаны на этот хаб">Тестирование мобильных приложений</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/it_testing/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Тестирование IT-систем'); }" title="Вы не подписаны на этот хаб">Тестирование IT-систем</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/mobile_dev/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Разработка мобильных приложений'); }" title="Вы не подписаны на этот хаб">Разработка мобильных приложений</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/company/mobileup/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Блог компании MobileUp'); }" title="Вы не подписаны на этот хаб">Блог компании MobileUp</a>
+</li>
+</ul>
+<ul class="post__marks inline-list"></ul>
+<div class="post__body post__body_full">
+<div class="post__text post__text-html js-mediator-article"><p><img src="https://habrastorage.org/webt/l-/59/vd/l-59vddhfin5l9pkko8sybrbuh0.png"/></p><br/>
+<p>Обычно на должность руководителя проектов в IT-компании требуются люди с опытом от 1 года. Поэтому часто неопытные менеджеры устраиваются на работу аналитиками, тестировщиками, иногда даже разработчиками.</p><br/>
+<p>Если хорошо себя проявить, то со временем вам будут доверять больше управленческих задач. При этом не всегда получается отказаться от старых обязанностей. Приходится совмещать две роли на проекте. Так и я, имея опыт в тестировании и аналитике, дополнительно стала получать задачи руководителя проекта. Со временем я полностью перешла в управление проектами.</p><br/>
+<p>В этой статье я делюсь наблюдениями и выводами. Как в одном человеке конфликтуют привычки тестировщика и обязанности руководителя проекта? С какими проблемами приходится сталкиваться? Какую пользу можно извлечь при таком переходе? Если хотите получить ответы на эти вопросы, добро пожаловать под кат.</p><a name="habracut"></a><br/>
+<h1 id="problema-1-rasstanovka-prioritetov">Проблема 1. Расстановка приоритетов</h1><br/>
+<p>Плохая новость: в начале перехода старые задачи никуда не делись, появились ещё и новые обязанности. Задач много, все они важные. Возникало огромное желание клонировать себя, чтобы выполнять их одновременно.</p><br/>
+<p><img src="https://habrastorage.org/webt/hz/35/v9/hz35v9pnwbyhsup266bhdwbwvti.png"/></p><br/>
+<p>Увы, но задачи менеджмента гораздо важнее задач тестировщика, если вам приходится совмещать. Теперь вы ответственны за всех в команде, и откладывание управленческих задач чревато простоем других.</p><br/>
+<p><strong>Что делать?</strong> Мне помогало составление списка задач, опираясь на вопрос: «Если отложу эту задачу, как это повлияет на проект?», – и соблюдение полученного плана. Теперь главное — не баги, а задачи, сроки и бюджет проекта.</p><br/>
+<h1 id="problema-2-nehvatka-vremeni">Проблема 2. Нехватка времени</h1><br/>
+<p>Многие «переходящие в менеджмент» специалисты с этим сталкиваются. Времени на полноценное погружение в тестирование не остаётся. Тестирование либо откладывается на последний момент и тормозит разработку, либо страдает от некачественного исполнения. Оба варианта неприемлемы.</p><br/>
+<p><img src="https://habrastorage.org/webt/if/ki/an/ifkiand99mat9ey3fueevd68z24.png"/></p><br/>
+<p><strong>Что делать?</strong> Закрепите или развейте проблему фактами. Мне помог дотошный трекинг времени всех выполненных задач.</p><br/>
+<p>Проанализировав полученные результаты, я выявила два направления, над которыми нужно было поработать.</p><br/>
+<p><strong>Первое направление:</strong> неэффективное выполнение определённого типа задач.</p><br/>
+<p>Например, у меня это были долгие переговоры с заказчиком и затянутые по времени митинги.</p><br/>
+<p>В таком случае нужно думать, как оптимизировать, экспериментировать. Пока не решите этот момент, нет смысла просить выделить ещё людей в помощь на проект.</p><br/>
+<p><strong>Второе направление:</strong> задачи, которые каждый раз отодвигаются как неприоритетные, пока не начнут «подгорать».</p><br/>
+<p>В частности для меня, задач менеджмента становилось больше, так как команда росла. Задачи тестирования откладывались до последнего. Началась работа сверх нормы, чтобы успеть всё и везде. На меня отрицательно влияли систематические переработки. Я была неэффективна и особого энтузиазма не было.</p><br/>
+<p>Помогла расстановка приоритетов и трекинг времени. Не бойтесь консультироваться с руководством, правильно ли вы оцениваете важность задачи. Это нормально, так как у вас ещё мало опыта в менеджменте. Таким образом, вы покажете проблему изнутри.</p><br/>
+<p>Если начальство умеет слушать и ваши аргументы будут адекватными, то вам в помощь найдут специалиста. С прискорбием сообщаю очевидное: есть большая вероятность, что с вас снимут задачи тестировщика.</p><br/>
+<h1 id="problema-3-otnoshenie-k-melkim-detalyam">Проблема 3. Отношение к мелким деталям</h1><br/>
+<p>По инерции я была в курсе всего на проекте. С одной стороны, хорошо всё понимать. С другой стороны, начинался перегруз информацией, и был большой риск упустить что-то важное.</p><br/>
+<p><img src="https://habrastorage.org/webt/cc/p1/0f/ccp10fmwwumfawtdvljxac_swnw.png"/></p><br/>
+<p>Раньше я наизусть могла рассказать, в каком месте какая может возникнуть ошибка и как она обрабатывается. Теперь на выяснение этого просто не хватало времени. И я корила себя за то, что не в курсе всей информации по проекту.</p><br/>
+<p><strong>Что делать?</strong> Понять, что за детали теперь несут ответственность другие члены команды. Задача руководителя – знать, у кого можно быстро получить информацию при необходимости.</p><br/>
+<h1 id="problema-4-doverie-k-komande">Проблема 4. Доверие к команде</h1><br/>
+<p><img src="https://habrastorage.org/webt/l1/we/ee/l1weee0etmdxvqgh8qxlj-a75je.png"/></p><br/>
+<p>Я понимала, что могу проверить лучше, найти баг быстрее. У меня был постоянный соблазн перепроверить.</p><br/>
+<p><strong>Что делать?</strong> Выдохнуть и дать команде самостоятельно заниматься задачами и решать возникающие проблемы, если время ещё есть. Задача руководителя – обеспечить комфортное выполнение задачи всем членам команды. Не надо мешать своей преждевременной помощью.</p><br/>
+<p>Я наблюдала за проектной деятельностью руководителей, которым повезло сразу начать свой путь с менеджмента. Они легко оперируют абстракциями, не пытаясь понять, что там внутри. Зато с помощью своих навыков тестирования, я выручала команду в кризисных ситуациях.</p><br/>
+<h1 id="problema-5-otvetstvennost-za-komandu">Проблема 5. Ответственность за команду</h1><br/>
+<p><img src="https://habrastorage.org/webt/av/-b/8v/av-b8vicf8fqcauthbugvoj20t4.png"/></p><br/>
+<p><strong>Что делать?</strong> Принимать всю ответственность на себя. Не винить кого-то конкретного. Учиться выражать обоснованное недовольство команде, когда это требуется. Транслировать претензии заказчика только в виде задач. Уметь защищать команду. Стараться понимать настроение в команде.</p><br/>
+<p>Я умела принимать ответственность на себя. Сложнее оказалось найти нужные слова, когда возникали проблемы. Надо хорошо разбираться в людях, чтобы неосторожным словом их не демотивировать. Это непросто сделать, ведь часто руководители проекта работают с теми людьми, которых им назначили на проект. К каждому нужен свой подход.</p><br/>
+<p>Кому-то из команды наверняка будет сложно перестроиться на то, что тестировщик стал руководителем, и нужно отчитываться перед ним. Увы, это исправит только время. Надо будет доказывать команде, что вы в состоянии принимать хорошие управленческие решения и можете контролировать процесс.</p><br/>
+<h1 id="problema-6-vnutrenniy-perfekcionizm">Проблема 6. Внутренний перфекционизм</h1><br/>
+<p><img src="https://habrastorage.org/webt/_f/h5/g1/_fh5g12o7ucad3tz9lriw58srxk.png"/></p><br/>
+<p>Нужно вовремя сказать «стоп» и отсеять то, что может подождать. Это может оценить только руководитель проекта, он в курсе всей финансовой стороны и отвечает за соответствие планам.</p><br/>
+<p><strong>Что делать?</strong> Теперь всё нужно рассматривать через призму «время – деньги». Важно выпустить релиз вовремя. Иногда лучше обсудить проблему с заказчиком и совместно расставить приоритеты, нежели пытаться всё-всё-всё пофиксить.</p><br/>
+<p>В этом кроется большая пропасть между руководителем проекта и отделом тестирования. Тестировщики обнаруживают проблему и испытывают радость, что они выполнили свой долг. Руководитель боится обнаружить проблему, так как это затянет срок выполнения задачи.</p><br/>
+<h1 id="problema-7-pretenzii-i-pessimizm">Проблема 7. Претензии и пессимизм</h1><br/>
+<p><img src="https://habrastorage.org/webt/al/kh/jj/alkhjjldffspdajww3bf0pj_wxy.png"/></p><br/>
+<p>Невозможно избежать всех проблем. Они возникают как в команде, так и со стороны заказчиков. Когда в команде появлялся недовольный, то это быстро распространялось на других.</p><br/>
+<p><strong>Что делать?</strong> Не поддаваться панике, пресекать её безосновательное распространение на проекте. Сосредотачиваться на поисках решения. Спокойно относиться к недовольству и сохранять здравый рассудок. Меньше эмоций.</p><br/>
+<p>Недовольство – это нормально, потому что все хотят улучшить проект. Только у безразличных нет претензий. Надо учиться с этим работать.</p><br/>
+<h1 id="moi-vyvody">Мои выводы</h1><br/>
+<p>В этом списке я обозначила те проблемы, с которыми сталкивалась сама при переходе из тестирования в менеджмент. Часть из них удалось преодолеть, по другим осознание пришло только после наблюдения за более опытными коллегами.</p><br/>
+<p>На должности руководителя проекта приходилось учиться жить с такими особенностями:</p><br/>
+<ul>
+<li>Мало исследовательских задач. Приобретённые технические навыки забываются и устаревают за ненадобностью.</li>
+<li>Отсутствие возможности набрать свою команду. Чаще всего руководители проектов работают с теми, кого им назначили на проект.</li>
+<li>Перейти на другой проект – сложно. Не нравится проект? Значит вы что-то делаете не так.</li>
+<li>Нет независимости от обязательного чтения мессенджеров/писем 24/7. Огромное количество коммуникаций, созвонов, встреч и писем.</li>
+<li>Сложно изолироваться от внезапных важных задач, которые требуют немедленного переключения.</li>
+<li>Нужно иметь стальные нервы, чтобы умело фильтровать поток проблем, поступающих с разных сторон.</li>
+</ul><br/>
+<p>Полезные навыки, которые удалось приобрести:</p><br/>
+<ul>
+<li>Способность найти общий язык со всеми членами команды и заказчиками.</li>
+<li>Умение решать проблемы на проекте и прогнозировать их.</li>
+<li>Понимание и принятие причин управленческих решений.</li>
+<li>Осознание, как в целом построен процесс разработки проекта.</li>
+</ul><br/>
+<p>Но это всё только личный опыт и наблюдения. Не бойтесь пробовать новое.</p></div>
+<script data-counter="2820404" id="js-mpf-mediator-init">!function(e){function t(t,n){if(!(n in e)){for(var r,a=e.document,i=a.scripts,o=i.length;o--;)if(-1!==i[o].src.indexOf(t)){r=i[o];break}if(!r){r=a.createElement("script"),r.type="text/javascript",r.async=!0,r.defer=!0,r.src=t,r.charset="UTF-8";;var d=function(){var e=a.getElementsByTagName("script")[0];e.parentNode.insertBefore(r,e)};"[object Opera]"==e.opera?a.addEventListener?a.addEventListener("DOMContentLoaded",d,!1):e.attachEvent("onload",d):d()} } }t("//top-fwz1.mail.ru/js/code.js","_tmr"),t("//mediator.imgsmail.ru/2/mpf-mediator.min.js","_mediator")}(window);</script>
+</div>
+<dl class="post__tags">
+<dt class="post__tags-label">Метки:</dt>
+<dd class="post__tags-list"> <ul class="inline-list inline-list_fav-tags js-post-tags">
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%5D&amp;target_type=posts" rel="tag">тестирование</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B0%D0%BC%D0%B8%20%D0%B8%20%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D0%BE%D0%B9%5D&amp;target_type=posts" rel="tag">управление проектами и командой</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%BF%D1%80%D0%BE%D0%B1%D0%BB%D0%B5%D0%BC%D1%8B%20%D1%80%D0%BE%D1%81%D1%82%D0%B0%5D&amp;target_type=posts" rel="tag">проблемы роста</a></li>
+</ul>
+<button class="btn btn_outline_grey btn_mini hidden js-fav-edit-link" data-id="344266" data-type="2" onclick="show_edit_tags(this)" type="button">Добавить метки</button>
+</dd>
+</dl>
+</div>
+</article>, <article class="post post_full" id="post_344298">
+<div class="post__wrapper">
+<header class="post__meta">
+<a class="post__user-info user-info" href="https://habrahabr.ru/users/380365/" title="Автор публикации">
+<span class="default-image_mini default-image_pink">
+<svg aria-hidden="true" class="icon-svg" height="24" role="img" version="1.1" viewbox="0 0 24 24" width="24"><path d="M21.5 24h-19c-1.379 0-2.5-1.122-2.5-2.5v-19c0-1.379 1.122-2.5 2.5-2.5h19c1.379 0 2.5 1.122 2.5 2.5v19c0 1.379-1.122 2.5-2.5 2.5zm-19-23c-.827 0-1.5.673-1.5 1.5v19c0 .827.673 1.5 1.5 1.5h19c.827 0 1.5-.673 1.5-1.5v-19c0-.827-.673-1.5-1.5-1.5h-19zM15.598 12.385zM19.438 15.417l-.002-.005v-.001c-.875-2.226-2.484-3.054-3.445-3.549l-.273-.143c.029-.497-.025-1.034-.167-1.599l-.128.032.123-.044c-.765-2.152-1.757-2.585-2.632-2.967l-.006-.003-.535-2.121c.357-.065.628-.375.628-.752.001-.423-.342-.765-.765-.765s-.766.342-.766.765c0 .358.248.657.581.74l-.825 1.654-.014-.003-.024-.003c-1.053-.033-1.842.369-2.5.947-.633-.322-1.515-.729-2.158-1.814.107-.12.174-.276.174-.45 0-.375-.303-.678-.678-.678s-.678.303-.678.678.303.678.678.678l.221-.04c.416.597 1.09 1.181 1.347 2.828l-.072.091.104.081-.112-.067c-1.157 1.914-.793 4.248.207 5.37-.998 2.546-1.035 4.681-.097 5.868l.002.002.003.003c.119.162.313.233.524.233.189 0 .39-.057.559-.154.312-.179.441-.459.326-.713l-.12.054.119-.056c-.581-1.243-.474-2.713.314-4.37.4.131.778.208 1.145.234l.139.73c.264 1.418.514 2.757 1.297 4.006.132.264.453.387.777.387.122 0 .245-.018.357-.051.385-.116.591-.399.537-.738l-.129.021.125-.042c-.204-.606-.431-1.146-.649-1.67-.373-.894-.725-1.742-.891-2.737.407-.042.797-.129 1.161-.261.825.692 1.661 1.492 2.743 3.406h.001c.072.14.224.215.41.215.105 0 .222-.024.339-.073.365-.155.652-.531.477-1.006v-.001c-.432-1.849-1.426-2.778-2.428-3.547.162-.175.311-.366.442-.576.75.399 1.878 1.005 3.127 2.766l.047.067.011-.008c.151.156.317.24.48.24.096 0 .191-.027.279-.084.306-.194.439-.662.29-1.005zm-8.878-2.493c-.947 0-1.713-.767-1.713-1.713s.767-1.713 1.713-1.713c.947 0 1.713.767 1.713 1.713s-.767 1.713-1.713 1.713zm6.587 4.648l-.084.021v-.001l.084-.02zm-2.007-5.312zm.022 1.006zM11.225 11.604c0 .385-.312.697-.697.697s-.697-.312-.697-.697c0-.385.312-.697.697-.697s.697.312.697.697z"></path></svg>
+</span>
+<span class="user-info__nickname user-info__nickname_small">380365</span>
+</a>
+<span class="post__time">сегодня в 19:12</span>
+</header>
+<h1 class="post__title post__title_full">
+<span class="post__title-text">Убунту OpenBox, установка и настройка</span>
+</h1>
+<ul class="post__hubs post__hubs_full-post inline-list">
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/nix/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', '*nix'); }" title="Вы не подписаны на этот хаб">*nix</a>
+</li>
+</ul>
+<ul class="post__marks inline-list"><li class="inline-list__item inline-list__item_post-type"><a class="post__type-label" href="/sandbox/" title="Перейти в песочницу">Из песочницы</a></li></ul>
+<div class="post__body post__body_full">
+<div class="post__text post__text-html js-mediator-article">С возрастом всё больше становится жалко времени на бесплодные ёрзанья мышкой; всё больше раздражения вызывает загружаемый с каждой DE какой-то бесконечный хлам, который съедает время и ресурсы с малопонятными целями. И начинается традиционное нисхождение: от KDE к XFCE, потом к LXDE. Наверное, когда-нибудь я дойду и до голой консоли на десктопе. Но пока меня остановил OpenBox.<br/>
+<a name="habracut"></a><br/>
+<p>«CrunchBang своими руками» – так чаще всего называются подобные руководства. Некоторые пишут совсем коротко: «Посмотри конфиги CrunchBang и настрой по ним свой OpenBox!»<br/>
+</p><p>Я посмотрел конфиги CrunchBang. Только он уже не CrunchBang, а BunsenLabs называется. Установил его на своём ноутбуке для изучения – wi-fi не работает: заводится и тихо умирает. Думаю, это из-за старого ядра – наблюдал такое раньше. Попытался перенести конфиги в Убунту – не получилось: там половина команд начинается с префикса «bl-», понятно, что это будет несовместимым с другими дистрибутивами. Стало очевидно, что лёгкого пути не будет.<br/>
+</p><p>Изначально для моей «голой» системы было два варианта: Дебиан netinst или Убунту сервер. После того как новенький Дебиан 9.1 гордо отказался конфигурировать Mysql (точнее, Mariadb) – даже после угрожающих размахиваний напильником и чтения вслух гневных нецензурных заклинаний с ЛОРа – остался только один вариант.<br/>
+<br/>
+</p><p>Установил Убунту сервер 16-с-чем-то. На работе. Пришёл домой, чтобы тихо посидеть над OpenBox'ом, а на ноутбуке уже интернет не работает. Потому что на работе я в него перед установкой провод воткнул, чтобы долго не разбираться. А дома вай-фай. И что? Куда тыкать мышкой, чтобы выбрать беспроводную сеть? Пошёл на работу, воткнул провод, установил lubuntu-desktop, wi-fi появился, красота! Потом анекдот про двух ковбоев вспомнил: «А тебе не кажется, Джон, что мы оба забесплатно дерьма поели?» То есть Lubuntu я и так мог скачать и установить, сразу, готовую, а не таким хитрым способом. Задача была немного другая.<br/>
+<br/>
+</p><p>Путь оказался ещё менее лёгким. Пришлось разбираться с этими вашими /etc/network/interface'ами. Разбирался, читал, экспериментировал. Для начала узнал, как устанавливать сами «окна» – после установки «голой» системы, надо в консоли писать что-то вроде:</p><br/>
+<pre><code class="bash">$ sudo apt install xorg
+$ sudo apt install openbox obmenu tint2 conky lightdm gdebi geany xarchiver
+</code></pre><br/>
+<p>Вы спросите: ну ладно ещё Xarchiver, но причём тут Geany? – Так, для примера; там большой хвост ещё из разных предпочтений тянется от разных пользователей в интернете — я ведь не первый, кто пытается настраивать OpenBox для себя. Но это всё не очень принципиально. Важно то, что это неполный набор, неработающий!<br/>
+</p><br/>
+<h4>WiFi</h4><br/>
+<p>В процессе экспериментов с некоторыми «голыми» debian-based ОС я выучил наизусть, что для возможности подключения к wi-fi мой файл /etc/network/interfaces должен выглядеть так:</p><br/>
+<pre><code>auto wlp1s0
+iface wlp1s0 inet dhcp
+wpa-ssid мой_dlink
+wpa-psk мой_тайный_ключ_0a8396f1a4f6771e4a083691fe
+</code></pre><br/>
+<p>Это меня и подвело – то, что выучил наизусть. Файл-то я скопировал, а wi-fi не работает. Потому что где-то в середине экспериментов у меня возник вопрос: вот я отказался от LXDE, так, может, и Lightdm для OpenBox'а не нужен? И ответ у меня получился положительный. То есть я его в итоге не стал устанавливать, совсем. Авторизуюсь в консоли, делаю там что-то, а потом вдруг мне хочется в окна мышкой потыкать, и я пишу сакраментальное:</p><br/>
+<pre><code class="bash">$ startx
+</code></pre><br/>
+<p>Потому что у меня задачи такие – в основном работа с сервером; и иногда хочется эту работу сделать удобнее – ну, там, несколько вкладок в файл-менеджере использовать, или в соседнем окне фильм посмотреть. Я не проверял, устанавливаются ли «беспроводные инструменты» вместе с Lightdm или эти инструменты тянет за собой LXDE какое-нибудь, но без Lightdm и без LXDE – точно не устанавливаются. Поэтому более правильно команда установки должна выглядеть так:</p><br/>
+<pre><code class="bash"># (Вариант 1)
+$ sudo apt install openbox obmenu tint2 xxkb wpasupplicant wireless-tools
+</code></pre><br/>
+<p>Те, кто не знает ещё своего длинного зашифрованного ключа для вайфая, могут записать его в текстовый файл wpa-psk.txt так:</p><br/>
+<pre><code class="bash">$ wpa_passphrase мой_dlink(ssid) мой_обычный_пароль&gt;wpa-psk.txt
+</code></pre><br/>
+<p>Ещё деталь: волшебное слово <em>wlp1s0</em>, для обращения к вашему сетевому интерфейсу, можно узнать, например, командой:</p><br/>
+<pre><code class="bash">$ ip address
+</code></pre><br/>
+<p>И там у вас может оказаться совсем другое слово – например, <em>wlan0</em>.<br/>
+</p><p>Когда же мне надоест руками править файл /etc/network/interfaces при переходе из одного здания в другое, я тоже знаю, что мне надо будет сделать – установить NetworkManager:</p><br/>
+<pre><code class="bash">$ sudo apt install network-manager
+</code></pre><br/>
+<p>Потом создать файл в своём домашнем каталоге ~/.config/openbox/autostart (если его ещё нет) и дописать туда две строчки:</p><br/>
+<pre><code>tint2 &amp;
+nm-applet &amp;
+</code></pre><br/>
+<p>В сети описываются проблемы с апплетами для OpenBox'а, возникающие иногда из-за неправильной последовательности загружаемых модулей. Одно из решений я нашёл такое – вместо простого «tint2 &amp;» написать:</p><br/>
+<pre><code>if which tint2 &gt;/dev/null 2&gt;&amp;1; then
+  (sleep 2 &amp;&amp; tint2) &amp;
+fi
+nm-applet &amp;
+</code></pre><br/>
+<p>Видимо, предлагаемая задержка в 2 секунды помогает автозагрузчику OpenBox'а пережить разный сторонний загружаемый бутор и потом без помех отобразить желанную иконку сетей, по которой можно щёлкать мышкой. На сайте <a href="https://wiki.archlinux.org/">wiki.archlinux.org</a> я видел ещё более «медленную» конструкцию:</p><br/>
+<pre><code># запуск Xcomppmgr и tint2 в Openbox
+if which tint2 &gt;/dev/null 2&gt;&amp;1; then
+  (sleep 2 &amp;&amp; xcompmgr) &amp;
+  (sleep 2 &amp;&amp; tint2) &amp;
+fi
+</code></pre><br/>
+<p>В целом, конечно, такая стратегия выглядит как-то сомнительно: мы же в итоге стремимся к «мгновенной» загрузке и выгрузке «иксов», иначе зачем нам этот путь упрощений – от KDE к XFCE, LXDE, OpenBox'у?<br/>
+</p><br/>
+<h4>Важная Информация, панели, виджеты, погода</h4><br/>
+<p>Куда делись из моей команды установки OpenBox Коньки (Conky)? Это такой апплет (или виджет?), который прямо на рабочем столе показывает, сколько у вас осталось памяти и не слишком ли перегрелся процессор. Я понял, что он мне так же не нужен, как и Lightdm, и Xcomppmgr из примера выше. В развитой мерфологии есть такая рекомендация: перед тем как пойти сдавать анализы в поликлинику, определите, что вы будете делать, если анализы положительные; подумайте, что будете делать, если анализы отрицательные; сравните ваши действия – если они одинаковы в обоих случаях, зачем вам вообще идти в поликлинику?<br/>
+<br/>
+</p><p>Зачем мне знать, сколько осталось памяти? Если комп уже начал сильно тормозить, я и так знаю, что делать, – например, закрыть все открытые окна («Если вы что-нибудь открыли – закройте»). И я знаю (чувствую пальцами), когда ноутбук перегревается, и тоже знаю, что делать, когда он начал перегреваться постоянно – например, можно попробовать отнести его на профилактику.<br/>
+<br/>
+</p><p>Ну, иногда бывает нужно посмотреть, кто <em>конкретно</em> больше памяти жрёт – Firefox или Chromium. Не для практической пользы, конечно, а чтобы вставлять потом умные замечания в дискуссии и базары на форумах. Но для этого постоянно работающий апплет не нужен, достаточно запустить на минутку в консоли команду: </p><br/>
+<pre><code class="bash">$ top -oRES</code></pre><br/>
+<h4>Клавиатура. Переключатель раскладки</h4><br/>
+<p>Как же жить без этого? Я бы вполне удовлетворился правкой файла /etc/default/keyboard:</p><br/>
+<pre><code>XKBMODEL="pc105"
+XKBLAYOUT="us,ru"
+XKBVARIANT=","
+XKBOPTIONS="grp:shifts_toggle,grp:alt_caps_toggle,terminate:ctrl_alt_bksp,compose:ralt,grp_led:scroll"
+</code></pre><br/>
+<p>Если бы не две проблемы: 1) не всегда правка этого файла помогает – конфиги клавиатуры во время загрузки оконной системы читаются ещё из нескольких тайных мест; 2) мне удобнее, когда в разных открытых окнах запоминается разная раскладка, а в конфиге /etc/default/keyboard такое поведение окнам назначить нельзя.<br/>
+</p><p>Поэтому устанавливаем ещё одну программу:</p><br/>
+<pre><code class="bash">$ sudo apt install xxkb
+</code></pre><br/>
+<p>Впрочем, она уже записана в нашу общую «правильную» (Вариант 1) команду установки OpenBox. Потом создаём файл ~/.xxkbrc с примерно таким содержанием:</p><br/>
+<pre><code>XXkb.controls.add_when_start: yes
+XXkb.controls.add_when_create: yes
+XXkb.controls.add_when_change: yes
+XXkb.controls.focusout: yes
+XXkb.mainwindow.type: tray
+XXkb.mainwindow.label.enable: yes
+XXkb.mainwindow.enable: yes
+</code></pre><br/>
+<p>В управляющей полоске каждого окна будет отображаться флажок языка, и каждое окно запоминает текущую раскладку. И да, сами клавиши переключения раскладки надо записать в файл ~/.config/openbox/autostart в виде такой команды:</p><br/>
+<pre><code class="bash">setxkbmap -layout "us,ru" -option "grp:shifts_toggle,grp:alt_caps_toggle,terminate:ctrl_alt_bksp,compose:ralt,grp_led:scroll" &amp;
+</code></pre><br/>
+<h4>Файл-менеджер</h4><br/>
+<p>Мои наиболее частые действия на компьютере – открыть файл и что-нибудь написать в нём. Иногда это связный русский текст, иногда что-то вроде</p> <br/>
+<pre><code class="css">body {width:800px; margin:0 auto;}</code></pre><br/>
+<p>Часто приходится открывать файлы по сети – хотя бы чтобы просто посмотреть, что там написано. Поэтому мне совершенно необходим такой «стек» программ: файл-менеджер – фтп, smb, или fish клиент – текстовый редактор с подсветкой и проверкой орфографии. И ещё желательно не вводить каждый раз пароли для удалённого доступа.<br/>
+</p><p>Такие задачи можно решать, например, с помощью связки программ Krusader – Kate. А Kwalletmanager для хранения паролей сам с ними устанавливается. Да. И ещё треть KDE, наверное. Но тут уж ничего не сделаешь. Пробовал Tux-commander – он открывает файлы по сети, но не сохраняет обратно, во всяком случае «из коробки»; да и в целом возможности явно беднее, чем у Krusader'а. Те же проблемы и у «родных» файловых менеджеров KDE, XFCE, LXDE. То есть кому-то это всё равно, а для меня – проблема.<br/>
+</p><p>Таким образом, команда установки удлиняется на пару пунктов: krusader kate krename kdiff3 unrar konsole. Конечно konsole – а иначе что будет открываться в Krusader'е при нажатии клавиши F2 (или, в новой версии, F9)?<br/>
+</p><br/>
+<h4>Русификация и проверка орфографии</h4><br/>
+<p>Русификация самой системы мне не нужна: мне привычно и удобно в файл-менеджере набирать три буквы «doc», чтобы переместиться на папку Documents; а если папка будет называться «Документы», придётся переключать раскладку – уже не очень удобно. Ну, или в Krusader'е Alt+s – «Settings» и прочие обозначения уже привычны; как это будет по-русски, мне даже страшно подумать.<br/>
+</p><p>А вот проверка орфографии – хотя бы от элементарных опечаток – необходима. Её в Kate обеспечивает aspell (или ispell? всё время их путаю). К ним надо локальные настройки скачивать. В Либреофисе – hunspell, к нему тоже надо словари. Ну и словари для Firefox – отдельная песня. Итого, вместе с самим Либреофисом и Firefox'ом команда установки получится: </p><br/>
+<pre><code class="bash">#(Вариант 2)
+$ sudo apt install openbox obmenu tint2 xxkb wpasupplicant wireless-tools \
+krusader kate krename kdiff3 unrar konsole libreoffice firefox \
+hunspell-ru aspell-ru firefox-l10n-ru libreoffice-l10n-ru geany gmrun mc mpv
+</code></pre><br/>
+<p>Совсем забыл про mc – его в Убунту-сервере по умолчанию нет, и я его поставил первым, ещё в голой консоли. Geany – для страховки: не с любым файлом удобно работать в Kate. <br/>
+</p><p>«Зачем же тебе l10n-ru, если тебе не нужна русификация интерфейса?» – обязательно спросит, гаденько усмехаясь, наблюдательный линуксоид. – Не для себя. Это моя старая боль в спине (или ниже?): установишь кому-то в очередной раз линукс – и тут же вопли: я ничего не понимаю! тут всё не по русски! Вот у меня уже и выработался рефлекс, можно сказать. Хотя вряд ли, конечно, при уводе очередного клиента с Виндовс я буду ставить ему OpenBox. Но готовиться надо: иногда попадаются пользователи совершенно не способные постоять за себя и готовые послушно заучивать все эти Alt+F2 и Win+w.<br/>
+</p><br/>
+<h4>Запуск программ</h4><br/>
+<p>Gmrun нужен, чтобы вызывать программы не мышкой из списка в меню, а непосредственно по Alt+F2, для чего в файл ~/.config/openbox/rc.xml должно быть, конечно, записано:</p><br/>
+<pre><code class="xml">&lt;keybind key="A-F2"&gt;
+	&lt;action name="Execute"&gt;
+		&lt;command&gt;gmrun&lt;/command&gt;
+	&lt;/action&gt;
+&lt;/keybind&gt;
+</code></pre><br/>
+<p>Например, захотите вы компьютеру сказать <s>shutup!</s> <code>shutdown -h 0</code> – вот и Alt+F2 пригодится. Конечно, не очень удобно для вызова программы полностью набирать её название. В Gmrun по умолчанию работает автодополнение названий программ при нажатии клавиши Tab. Это поведение можно изменить – чтобы подсказки выскакивали сразу и сами, без Tab. Для этого надо создать в домашней папке файл .gmrunrc и записать в него строку: <code>TabTimeout = 1</code>. В этом же файле можно указать некоторые другие настройки; полный их список можно посмотреть в файле /etc/gmrunrc; а лучше скопировать этот файл в ~/.gmrunrc и внести на новом месте нужные изменения.<br/>
+</p><p>Gmrun Alt+F2 с автодополнением программ – это, в сущности, замена вызова меню по Alt+F3 в XFCE или Alt+F1 в KDE, только без нудного лазанья по ответвлениям вида «Настройки», «Система», «Интернет»… К сожалению, собственных «actions» OpenBox'а там нет. Например, нельзя через Gmrun вызвать команду <em>Exit</em> – выгрузить сам OpenBox и вернуться в консоль. Или <em>Restart</em> – обновить конфигурацию после правки конфигов. Поэтому несколько команд всё равно приходится заучивать отдельно: Ctrl+Alt+r – Restart, Ctrl+Alt+0 – Exit. А чтобы они работали, надо добавить в файл ~/.config/openbox/rc.xml следующие записи:</p><br/>
+<pre><code class="xml">&lt;keybind key="C-A-r"&gt;
+	&lt;action name="Restart"/&gt;
+&lt;/keybind&gt;
+&lt;keybind key="C-A-0"&gt;
+	&lt;action name="Exit"/&gt;
+&lt;/keybind&gt;
+</code></pre><br/>
+<h4>Монтирование флэшек и локальных дисков</h4><br/>
+<p>Возможно, такие штатные менеджеры, как Thunar или PCManFM умеют монтировать флэшки. Или даже авто-монтировать при вставке. Мой Krusader в «минимальном» OpenBox'е не осилил: устройство он показывает, предлагает смонтировать, но потом говорит, прав не хватает. В режиме рута монтирует, но русские буквы отображаются вопросиками. То есть нужно, видимо, что-то ещё там скриптами подстраивать или дополнительными утилитами. Я решил проще – добавил в /etc/fstab две строчки:</p><br/>
+<pre><code>/dev/sdb1 /mnt/fleshka1 vfat noauto,user,rw,codepage=866,iocharset=utf8 0 2
+/dev/sdc1 /mnt/fleshka2 vfat noauto,user,rw,codepage=866,iocharset=utf8 0 2
+</code></pre><br/>
+<p>Наверное, надо ещё и sdb2 на всякий случай, но мне для моих флэшек хватает. Теперь Krusader монтирует и отмонтирует вставляемые флэшки правильно. Если у вас есть нужные для работы дополнительные разделы на локальных дисках, их тоже лучше сразу прописать в /etc/fstab. <br/>
+</p><br/>
+<h4>Заключение</h4><br/>
+<p>Остался вопрос: зачем в конце получившейся команды установки OpenBox (Вариант 2) написано <em>mpv</em>? С учётом того что мне ещё надо настраивать на моём Убунту сервере LAMP или QEMU, этот вопрос кажется мне каким-то мелким, не стоящим внимания.</p><br/>
+<p>Гораздо интереснее узнать, в чём я ошибся в своей настройке OpenBox и какие варианты настроек ещё бывают; что я забыл. Скажем, иногда надо видеть два окна сразу — например, рисунок клавиатуры и текстовый редактор (для изучения «слепого» набора). Можно ведь аккуратно разместить эти окна на экране клавиатурными сокращениями. А потом как-то заставить OpenBox запомнить это расположение окон. И вообще сохранить всю сессию. То есть тут есть над чем работать.</p><br/>
+<p>P.S. Чуть не забыл: если вы не используете NetworkManager, строчку <code>auto wlp1s0</code> в файле /etc/network/interfaces лучше закомментировать и использовать для подключения к сети команду в консоли: </p><br/>
+<pre><code class="bash">sudo ifdown wlp1s0 &amp;&amp; sudo ifup -v wlp1s0</code></pre><br/>
+
+(Вместо wlp1s0 — название вашего беспроводного интерфейса). Иначе загрузка Убунту может «зависнуть» минут на 5 в поисках несуществующей точки доступа к wi-fi.</div>
+<script data-counter="2820404" id="js-mpf-mediator-init">!function(e){function t(t,n){if(!(n in e)){for(var r,a=e.document,i=a.scripts,o=i.length;o--;)if(-1!==i[o].src.indexOf(t)){r=i[o];break}if(!r){r=a.createElement("script"),r.type="text/javascript",r.async=!0,r.defer=!0,r.src=t,r.charset="UTF-8";;var d=function(){var e=a.getElementsByTagName("script")[0];e.parentNode.insertBefore(r,e)};"[object Opera]"==e.opera?a.addEventListener?a.addEventListener("DOMContentLoaded",d,!1):e.attachEvent("onload",d):d()} } }t("//top-fwz1.mail.ru/js/code.js","_tmr"),t("//mediator.imgsmail.ru/2/mpf-mediator.min.js","_mediator")}(window);</script>
+</div>
+<dl class="post__tags">
+<dt class="post__tags-label">Метки:</dt>
+<dd class="post__tags-list"> <ul class="inline-list inline-list_fav-tags js-post-tags">
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%A3%D0%B1%D1%83%D0%BD%D1%82%D1%83%5D&amp;target_type=posts" rel="tag">Убунту</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bopenbox%5D&amp;target_type=posts" rel="tag">openbox</a></li>
+</ul>
+<button class="btn btn_outline_grey btn_mini hidden js-fav-edit-link" data-id="344298" data-type="2" onclick="show_edit_tags(this)" type="button">Добавить метки</button>
+</dd>
+</dl>
+</div>
+</article>, <article class="post post_full" id="post_343096">
+<div class="post__wrapper">
+<header class="post__meta">
+<a class="post__user-info user-info" href="https://habrahabr.ru/users/UberSchlag/" title="Автор публикации">
+<img class="user-info__image-pic user-info__image-pic_small" height="24" src="//habrastorage.org/getpro/habr/avatars/f92/56d/f01/f9256df01139d389430a8957275f8d1e.jpg" width="24"/>
+<span class="user-info__nickname user-info__nickname_small">UberSchlag</span>
+</a>
+<span class="post__time">сегодня в 12:47</span>
+</header>
+<h1 class="post__title post__title_full">
+<span class="post__title-text">Learnopengl. Урок 4.3 — Смешивание цветов</span>
+</h1>
+<div class="post__translatation">
+<a class="post__translatation-link" href="https://goo.gl/JnGqaQ" target="_blank" title="Автор оригинальной публикации: Joey de Vries">https://goo.gl/JnGqaQ</a>
+</div>
+<ul class="post__hubs post__hubs_full-post inline-list">
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/gamedev/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Разработка игр'); }" title="Вы не подписаны на этот хаб">Разработка игр</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/programming/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Программирование'); }" title="Вы не подписаны на этот хаб">Программирование</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/cpp/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'C++'); }" title="Вы не подписаны на этот хаб">C++</a>
+</li>
+</ul>
+<ul class="post__marks inline-list"><li class="inline-list__item inline-list__item_post-type"><span class="post__type-label" title="Перевод">Перевод</span></li><li class="inline-list__item inline-list__item_post-type"><span class="post__type-label" title="Обучающий материал">Tutorial</span></li></ul>
+<div class="post__body post__body_full">
+<div class="post__text post__text-html js-mediator-article"><img align="left" alt="OGL3" src="https://habrastorage.org/web/c9e/9b2/a3b/c9e9b2a3baf749ab8e2b385c6d93d966.png" width="300"/><br/>
+<h1>Смешивание цветов</h1><br/>
+
+Смешивание в OpenGL (да и других графических API, <i>прим. пер.</i>) является той техникой, которую обычно связывают с реализацией прозрачности объектов. Полупрозрачность объекта подразумевает, что он не залит одним сплошным цветом, а сочетает в себе в различных пропорциях оттенок своего материала с цветами объектов, находящихся позади. Как пример, можно взять цветное стекло в окне: у стекла есть свой оттенок, но в итоге мы наблюдаем смешение оттенка стекла и всего того, что видно за стеклом. Собственно, из этого поведения и возникает термин смешивание, поскольку мы наблюдаем итоговый цвет, являющийся смешением цветов отдельных объектов. Благодаря этому, мы можем видеть сквозь полупрозрачные объекты.<br/>
+<br/>
+<div class="spoiler"><b class="spoiler_title">В передыдущих сериях</b><div class="spoiler_text">Часть 1. Начало<br/>
+<br/>
+<ol>
+<li><a href="https://habrahabr.ru/post/310790/">OpenGL</a></li>
+<li><a href="https://habrahabr.ru/post/311198/">Создание окна</a></li>
+<li><a href="https://habrahabr.ru/post/311234/">Hello Window</a></li>
+<li><a href="https://habrahabr.ru/post/311808/">Hello Triangle</a></li>
+<li><a href="https://habrahabr.ru/post/313380/">Shaders</a></li>
+<li><a href="https://habrahabr.ru/post/315294/">Текстуры</a></li>
+<li><a href="https://habrahabr.ru/post/319144/">Трансформации</a></li>
+<li><a href="https://habrahabr.ru/post/324968/">Системы координат</a></li>
+<li><a href="https://habrahabr.ru/post/327604/">Камера</a></li>
+</ol><br/>
+
+Часть 2. Базовое освещение<br/>
+<br/>
+<ol>
+<li><a href="https://habrahabr.ru/post/329592/">Цвета</a></li>
+<li><a href="https://habrahabr.ru/post/333932/">Основы освещения</a></li>
+<li><a href="https://habrahabr.ru/post/336166/">Материалы</a></li>
+<li><a href="https://habrahabr.ru/post/337550/">Текстурные карты</a></li>
+<li><a href="https://habrahabr.ru/post/337642/">Источники света</a></li>
+<li><a href="https://habrahabr.ru/post/338254/">Несколько источников освещения</a></li>
+</ol><br/>
+
+Часть 3. Загрузка 3D-моделей<br/>
+<br/>
+<ol>
+<li><a href="https://habrahabr.ru/post/338436/">Библиотека Assimp</a></li>
+<li><a href="https://habrahabr.ru/post/338436/">Класс полигональной сетки Mesh</a></li>
+<li><a href="https://habrahabr.ru/post/338998/">Класс модели Model</a></li>
+</ol><br/>
+
+Часть 4. Продвинутые возможности OpenGL <br/>
+<br/>
+<ol>
+<li><a href="https://habrahabr.ru/post/342610/">Тест глубины</a></li>
+<li><a href="https://habrahabr.ru/post/344238/">Тест трафарета</a></li>
+<li>Смешивание цветов</li>
+</ol></div></div><a name="habracut"></a><br/>
+<div style="text-align:center;"><img src="https://habrastorage.org/webt/gg/rj/ay/ggrjayqlrgiz442vc0hzxi1cdc0.png"/></div><br/>
+
+Полупрозрачные объекты могут быть полностью прозрачными (все цвета проходят насквозь) или же частично прозрачными (пропускает свет, но добавляет и собственный оттенок). В компьютерной графике принято обозначать степень непрозрачности так называемоей <i>альфа-компонентой</i> вектора цвета. Альфа-компонента является четвертым элементом вектора цвета и вы, должно быть, уже не раз заметили её в предыдущих уроках. Однако, до этого момента мы всегда сохраняли это значение равным 1.0, что равнозначно полной непрозрачности. Установив же альфа-компоненту в 0.0 мы бы добились полной прозрачности. Значение 0.5 подразумевало бы, что итоговый цвет объекта на 50% задается своим материалом, а на 50% задается объектами, находящимися позади.<br/>
+<br/>
+
+Все текстуры, что мы использовали до сих пор содержали 3 компонента цвета: красный, синий и зеленый. Некоторые форматы текстур позволяют сохранять также и четвертую альфа-компоненту для каждого текселя. Это значение указывает, какие части текстуры полупрозрачны и насколько именно. Например, данная <a href="https://learnopengl.com/img/advanced/blending_transparent_window.png">текстура оконного стекла</a> имеет альфа-компоненту установленной в 0.25 для стеклянных участков и 0.0 для рамы. В других условиях стеклянные части были бы полностью красными, но из-за 75% прозрачности цвет большей частью определен фоном текущей веб-страницы.<br/>
+<br/>
+<div style="text-align:center;"><img src="https://habrastorage.org/webt/af/vb/tw/afvbtwgmvt9tm1a2z_td75ksgpk.png"/></div><br/>
+
+В скором мы добавим данную текстуру в новую сцену, но, для начала, обсудим более простую технику достижения прозрачности в тех случаях, где нужна либо полная прозрачность, либо полная непрозрачность.<br/>
+<br/>
+<h3>Отбрасывание фрагментов</h3><br/>
+
+В некоторых случаях частичная прозрачность не требуется: необходимо либо отобразить что-то, либо ничего, основываясь на значении цвета текстуры. Представьте себе пучок травы: простейшая реализация пучка потребовала бы текстуры травы на 2D кваде, расположенном в вашей сцене. Однако, задаче имитации пучка травы форма квада не очень-то помогает – нам бы не помешало скрыть части наложенной текстуры, оставляя некоторые другие.<br/>
+<br/>
+
+Представленная ниже текстура в точности представляет описанный случай: её участки либо полностью непрозрачны (альфа-компонента = 1.0), либо же полностью прозрачны (альфа-компонента = 0.0) – никаких средних значений. Можно заметить, что там, где нет изображения травинок видно фон сайта, а не цвет текстуры:<br/>
+<br/>
+<div style="text-align:center;"><img src="https://habrastorage.org/webt/y8/ps/qz/y8psqz4bhmr9mguj4lj9vbt5rzy.png"/></div><br/>
+
+Таким образом, при размещении растительности в нашей сцене мы бы хотели видеть только части текстуры, соответствующие частям растения, а остальные части текстуры, заполняющие полигон – отбрасывать. То есть отбрасывать фрагменты, содержащие прозрачные части текстуры, не сохраняя их в буфере цвета. Но прежде чем мы непосредственно замараем руки работой с фрагментами, необходимо научиться загружать текстуры с альфа-каналом.<br/>
+<br/>
+
+Для этого нам не придется что-то сильно изменять в знакомом коде. Функция-загрузчик из <i>stb_image.h</i> автоматически подгружает альфа-канал изображения, если таковой доступен. Но при этом необходимо явно указать OpenGL при создании текстуры, что она использует альфа-канал:<br/>
+<br/>
+<pre><code class="cpp">glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data); </code></pre><br/>
+
+Также убедитесь, что во фрагментом шейдере вы делаете выборку в вектор с 4мя компонентами, чтобы не остаться только с RGB значениями:<br/>
+<br/>
+<pre><code class="cpp">void main()
+{
+    // FragColor = vec4(vec3(texture(texture1, TexCoords)), 1.0);
+    FragColor = texture(texture1, TexCoords);
+}</code></pre><br/>
+
+Теперь, когда мы разобрались с загрузкой текстур с прозрачностью – самое время раскидать несколько пучков травы по сцене, использованной в уроке по <a href="https://habrahabr.ru/post/342610/">тесту глубины</a>.<br/>
+<br/>
+
+Создадим небольшой вектор, хранящий положение пучков травы в виде <i>glm::vec3</i>:<br/>
+<br/>
+<pre><code class="cpp">vector&lt;glm::vec3&gt; vegetation;
+vegetation.push_back(glm::vec3(-1.5f,  0.0f, -0.48f));
+vegetation.push_back(glm::vec3( 1.5f,  0.0f,  0.51f));
+vegetation.push_back(glm::vec3( 0.0f,  0.0f,  0.7f));
+vegetation.push_back(glm::vec3(-0.3f,  0.0f, -2.3f));
+vegetation.push_back(glm::vec3( 0.5f,  0.0f, -0.6f)); </code></pre><br/>
+
+Каждый объект травы рендерится как единственный квад с текстурой травы, назначенной ему. Не самый захватывающий метод имитации травки в 3D, но гораздо более эффективный, нежели использование полигональных моделей. С помощью небольших уловок, типа добавления в том же положении еще пары повернутых квадов с той-же текстурой, можно добиться неплохих результатов.<br/>
+<br/>
+
+Поскольку мы назначаем текстуру травы кваду нам понадобится новый VAO (vertex array object), заполнить VBO (vertex buffer object) и установить соответствующие указатели на атрибуты вершин. Далее, после рендера поверхности пола и кубов мы выводим нашу траву:<br/>
+<br/>
+<pre><code class="cpp">glBindVertexArray(vegetationVAO);
+glBindTexture(GL_TEXTURE_2D, grassTexture);  
+for(unsigned int i = 0; i &lt; vegetation.size(); i++) 
+{
+    model = glm::mat4();
+    model = glm::translate(model, vegetation[i]);				
+    shader.setMat4("model", model);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+}  
+</code></pre><br/>
+
+Выполнение программы выдаст такой вот результат:<br/>
+<br/>
+<div style="text-align:center;"><img src="https://habrastorage.org/webt/d1/zw/xv/d1zwxv1kfjj8bn0j7m9xfh5t_oi.png"/></div><br/>
+
+Так произошло, поскольку сама по себе OpenGL не знает ни что делать со значениями альфа-канала, ни когда применять отбрасывание фрагментов. Все это мы должны указать вручную. К счастью, с помощью шейдеров все делается довольно просто. В GLSL существует встроенная директива <i>discard</i>, вызов которой приводит к прекращению дальнейшей обработки текущего фрагмента без его попадания в буфер цвета. Отсюда вырисовывается решение: проверяем значение альфа-компоненты текстурного элемента и, если он меньше некого порога, отбрасываем его:<br/>
+<br/>
+<pre><code class="cpp">#version 330 core
+out vec4 FragColor;
+
+in vec2 TexCoords;
+
+uniform sampler2D texture1;
+
+void main()
+{             
+    vec4 texColor = texture(texture1, TexCoords);
+    if(texColor.a &lt; 0.1)
+        discard;
+    FragColor = texColor;
+}</code></pre><br/>
+
+В данном коде мы отбрасываем фрагмент, если альфа-компонента выборки из текстуры оказалась меньше величины 0.1. Такой шейдер обеспечит нам вывод только тех фрагментов, что оказались достаточно непрозрачными: <br/>
+<br/>
+<div style="text-align:center;"><img src="https://habrastorage.org/webt/kl/ku/mc/klkumchp0mbuy6xhuva_ohjrahe.png"/></div><br/>
+<blockquote>Отмечу, что при выборке на границах текстуры OpenGL выполняет интерполяцию значения на границе со значением из следующего за ним значения, полученным повторением текстуры (поскольку мы установили параметр повторения текстуры в <i>GL_REPEAT</i>). Для обычного применения текстур это нормально, но для нашей текстуры с прозрачностью это не годится: полностью прозрачное значение текселей на верхней границе смешивается с полностью непрозрачными текселями нижней границы. В результате вокруг квада с нашей текстурой может появится полупрозрачная цветная рамка. Для избежания этого артефакта нужно параметр повтора установить в <i>GL_CLAMP_TO_EDGE</i> при использовании текстур с прозрачностью.<br/>
+<pre><code class="cpp">glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	
+glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);    </code></pre></blockquote><br/>
+
+Код примера находится <a href="https://learnopengl.com/code_viewer_gh.php?code=src/4.advanced_opengl/3.1.blending_discard/blending_discard.cpp">здесь</a>.<br/>
+<br/>
+<h3>Смешивание</h3><br/>
+
+Несмотря на то, что отбрасывание фрагментов – удобный и простой способ, он не дает возможности применять частичное смешивание полупрозрачных цветов. Для рендера изображений с объектами, имеющими разную степень непрозрачности мы должны включить режим смешивания. Делается это, как и для большинства режимов OpenGL:<br/>
+<br/>
+<pre><code class="cpp">glEnable(GL_BLEND);  </code></pre><br/>
+
+Теперь, включив смешивание, стоит разобраться как же конкретно это работает.<br/>
+
+Смешивание OpenGL выполняется по следующей формуле<br/>
+<p><math>$$display$$\begin{equation}\bar{C}_{result} = \bar{\color{green}C}_{source} * \color{green}F_{source} + \bar{\color{red}C}_{destination} * \color{red}F_{destination}\end{equation}$$display$$</math></p><br/>
+
+где <math><img alt="$\bar{\color{green}C}_{source}$" data-tex="inline" src="https://habrastorage.org/getpro/habr/formulas/457/447/f17/457447f170203b3643cdcad5ffd1ec1d.svg"/></math>– вектор цвета источника. Это значение цвета, полученное из текстуры.<br/>
+<math><img alt="$\bar{\color{red}C}_{destination}$" data-tex="inline" src="https://habrastorage.org/getpro/habr/formulas/c28/107/a3d/c28107a3deb4bc099f5934e4fe27ad4b.svg"/></math> – вектор цвета приемника. Это значение цвета, хранимое на данный момент в буфере цвета.<br/>
+<math><img alt="$\color{green}F_{source}$" data-tex="inline" src="https://habrastorage.org/getpro/habr/formulas/306/9d1/a77/3069d1a778af23652c4b30c0aef9467a.svg"/></math> – множитель источника. Задает степень влияния альфа-компоненты на цвет источника.<br/>
+<math><img alt="$\color{red}F_{destination}$" data-tex="inline" src="https://habrastorage.org/getpro/habr/formulas/481/7bc/dac/4817bcdacf97e6277c8fd243e754b6a2.svg"/></math> – множитель приемника. Задает степень влияния альфа-компоненты на цвет приемника.<br/>
+<br/>
+
+После этапа выполнения фрагментного шейдера и прочих тестов (тесты трафарета и глубины, <i>прим. пер.</i>) данная формула смешивания вольна делать что угодно с цветами обработанных фрагментов и хранящимися в буфере цвета в текущий момент (значения цвета фрагментов из предыдущего кадра). Роли источника и приемника назначаются OpenGL автоматически, но множители для них мы можем задать сами. Для начала, рассмотрим следующий пример:<br/>
+<br/>
+<div style="text-align:center;"><img src="https://habrastorage.org/webt/rb/ys/hb/rbyshbpre5ouohllilszdpj4ez8.png"/></div><br/>
+
+Имеются два квадрата и полупрозрачный зеленый мы бы хотели нарисовать поверх непрозрачного красного. В таком случае цветом-приемником будет цвет красного квадрата, а, значит, должен быть занесен в буфер цвета первым.<br/>
+<br/>
+
+Возникает вопрос: как выбрать значения множителей в формуле смешивания? Ну, по крайней мере, нам следует умножить зеленый цвет второго квадрата на его величину альфа-компоненты, следовательно, <math><img alt="$\color{green}F_{source}$" data-tex="inline" src="https://habrastorage.org/getpro/habr/formulas/306/9d1/a77/3069d1a778af23652c4b30c0aef9467a.svg"/></math> примем равным альфа компоненте вектора цвета источника, т.е. 0.6. Исходя из этого, разумно будет предположить, что приемник обеспечит вклад в результат пропорциональный степени прозрачности, оставшейся доступной. Если зеленый квадрат обеспечивает 60% от итога, то красному квадрату должно достаться 40% (1. – 0.6). Так что множитель <math><img alt="$\color{red}F_{destination}$" data-tex="inline" src="https://habrastorage.org/getpro/habr/formulas/481/7bc/dac/4817bcdacf97e6277c8fd243e754b6a2.svg"/></math> устанавливаем равным разности единицы и альфа-компоненты вектора цвета источника. В результате выражение смешивания приобретает следующий вид:<br/>
+<p><math>$$display$$\begin{equation}\bar{C}_{result} = \begin{pmatrix} \color{red}{0.0} \\ \color{green}{1.0} \\ \color{blue}{0.0} \\ \color{purple}{0.6} \end{pmatrix} * \color{green}{0.6} + \begin{pmatrix} \color{red}{1.0} \\ \color{green}{0.0} \\ \color{blue}{0.0} \\ \color{purple}{1.0} \end{pmatrix} * \color{red}{(1 - 0.6)} \end{equation}$$display$$</math></p><br/>
+
+Результатом смешивания будет цвет на 60% состоящий из исходного зеленого и 40% исходного красного – это невнятный бурый цвет:<br/>
+<br/>
+<div style="text-align:center;"><img src="https://habrastorage.org/webt/-6/hc/c1/-6hcc1ptvrvwwga_faosqz9arja.png"/></div><br/>
+
+Результат будет занесен в буфер цвета, замещая старые значения.<br/>
+
+Ну а как же нам дать понять OpenGL какие значения коэффициентов смешивания мы хотим использовать? На наше счастье есть специальная функция:<br/>
+<br/>
+<pre><code class="cpp">glBlendFunc(GLenum sfactor, GLenum dfactor)</code></pre><br/>
+
+Она принимает два параметра, определяющие значения коэффициентов источника и приемника. В OpenGL API определен исчерпывающий список значений этих параметров, позволяющий настроить режим смешивания как душе угодно. Здесь приведу самые «ходовые» значения параметров. Отмечу, что постоянный вектор цвета <math><img alt="$\bar{\color{blue}C}_{constant}$" data-tex="inline" src="https://habrastorage.org/getpro/habr/formulas/1f8/a9b/4c4/1f8a9b4c4846ea634b9e595bb6c98cfd.svg"/></math> задается отдельно функцией <i>glBlendColor</i>.<br/>
+<br/>
+<div style="text-align:center;"><img src="https://habrastorage.org/webt/98/hz/ra/98hzradrwgp-e6toqr0qaq9nl5m.png"/></div><br/>
+
+Чтобы получить результат, описанный в примере с двумя квадратами, нам следует выбрать такие параметры, чтобы коэффициент источника равнялся <i>alpha </i>(значение альфа-компоненты) цвета источника, а коэффициент приемника равнялся <i>1 – alpha</i>. Что равнозначно вызову:<br/>
+<pre><code class="cpp">glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  </code></pre><br/>
+
+Также возможна раздельная настройка коэффициентов для RGB и альфа компонент посредством функции <i>glBlendFuncSeparate</i>:<br/>
+<br/>
+<pre><code class="cpp">glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);</code></pre><br/>
+
+Такой вызов настраивает смешивание RGB компонент как в предыдущем примере, дополнительно указывая, что альфа-компонента результата будет равна альфа-компоненте источника.<br/>
+
+OpenGL разрешает и еще более гибкую настройку формулы смешивания, разрешая выбор операции, производимой между компонентами формулы. По умолчанию компоненты источника и приемника складываются, но можно выбрать и вычитание, если таков замысел. Определяет поведение функция <br/>
+<br/>
+<pre><code class="cpp">glBlendEquation(GLenum mode)</code></pre><br/>
+
+И доступны три варианта значения параметра:<br/>
+<br/>
+<ul>
+<li><i>GL_FUNC_ADD</i>: значение по умолчанию, складывает компоненты: <math><img alt="$\bar{C}_{result} = \color{green}{Src} + \color{red}{Dst}$" data-tex="inline" src="https://habrastorage.org/getpro/habr/formulas/744/d4b/93d/744d4b93d73137864d04ae76497ab9b9.svg"/></math>.</li>
+<li><i>GL_FUNC_SUBTRACT</i>: вычитает компоненту приемника из компоненты источника: <math><img alt="$\bar{C}_{result} = \color{green}{Src} - \color{red}{Dst}$" data-tex="inline" src="https://habrastorage.org/getpro/habr/formulas/b59/b22/3eb/b59b223eb961eeee3de762f2cb8dff84.svg"/></math>. </li>
+<li><i>GL_FUNC_REVERSE_SUBTRACT</i>: вычитает компоненту источника из компоненты приемника: <math><img alt="$\bar{C}_{result} = \color{red}{Dst} - \color{green}{Src}$" data-tex="inline" src="https://habrastorage.org/getpro/habr/formulas/b46/d5b/399/b46d5b399432559220b1920539a4f411.svg"/></math>.</li>
+</ul><br/>
+
+Обычно вызов <i>glBlendEquation </i>не требуется, поскольку режим по умолчанию <i>GL_FUNC_ADD</i> и так подходит для большинства случаев применения. Но для нестандартных подходов и попыток создать непривычное визуальное решение вполне могут пригодится и прочие режимы вычисления формулы смешивания.<br/>
+<br/>
+<h4>Рендер полупрозрачных текстур</h4><br/>
+
+Итак, мы познакомились с тем, как библиотека выполняет смешивание. Самое время применить эти знания на практике, создав пару-тройку прозрачных окон. Используем ту же сцену, что и в начале урока, но вместо пучков травы разместим объекты с уже упоминавшейся в начале урока <a href="https://learnopengl.com/img/advanced/blending_transparent_window.png">текстурой окна</a>.<br/>
+<br/>
+
+Для начала включим режим смешивания и выберем его параметры:<br/>
+<br/>
+<pre><code class="cpp">glEnable(GL_BLEND);
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);</code></pre><br/>
+
+Поскольку мы включили смешивание, то в отбрасывании прозрачных фрагментов более нет нужды. Код фрагментного шейдера вернем к прежнему состоянию:<br/>
+<br/>
+<pre><code class="cpp">#version 330 core
+out vec4 FragColor;
+in vec2 TexCoords;
+uniform sampler2D texture1;
+
+void main()
+{             
+    FragColor = texture(texture1, TexCoords);
+}  </code></pre><br/>
+
+Теперь при обработке каждого фрагмента OpenGL смешивает цвет обрабатываемого фрагмента и хранимого в буфере цвета согласно значению альфа-компоненты первого. Поскольку стеклянная часть окна полупрозрачна, то мы должны видеть остальную сцену позади окна:<br/>
+<br/>
+<div style="text-align:center;"><img src="https://habrastorage.org/webt/zh/yw/vd/zhywvdw1z_cx_clnni8ppicrmhu.png"/></div><br/>
+
+Однако, присмотревшись внимательно, можно заметить, что рендер некорректен. По какой-то причине полупрозрачные части ближайшего к нам окна перекрывают другие окна в фоне!<br/>
+
+Причиной то, что тест глубины не учитывает прозрачен фрагмент или нет при обработке. В итоге все фрагменты квада с текстурой окна проходят тест глубины одним образом, принадлежат ли они к стеклянной части или нет. Несмотря на то, что позади стеклянных частей должны сохраняться старые фрагменты тест глубины их отбросит.<br/>
+<br/>
+
+Итог: нельзя выводить полупрозрачные объекты абы как и надеяться, что тест глубины и смешивание сами решат как все сделать корректно. Чтобы обеспечить корректный рендер окон, перекрытых другими окнами, нам необходимо сначала осуществлять вывод окон, лежащих вдали. Таким образом нам необходимо самим отсортировать окна по положению от самых дальних к ближайшим и вывести в соответствии с этим порядком.<br/>
+<br/>
+<blockquote>Отмечу, что для случаев с полной прозрачностью (случай с травой) операция отбрасывания фрагментов не вызывает описанной проблемы, поскольку смешивания не происходит.</blockquote><br/>
+<h4>Рендер с сохранением порядка следования</h4><br/>
+
+Для корректной работы смешивания при рендере множества объектов необходимо начинать вывод с самого дальнего и заканчивать ближайшим. Непрозрачные объекты, не требующие смешивания могут выводиться в привычной манере с использованием буфера глубины, здесь сортировка не требуется. Но непрозрачную часть сцены необходимо отрисовать до вывода элементов, использующих смешивание. В итоге, порядок действий при рендере сцены, содержащей как непрозрачные, так и прозрачные объекты, выглядит следующим образом:<br/>
+<br/>
+<ol>
+<li>Вывести все непрозрачные объекты.</li>
+<li>Отсортировать прозрачные объекты по удалению.</li>
+<li>Нарисовать прозрачные объекты в отсортированном порядке.</li>
+</ol><br/>
+
+Одним из способов сортировки является упорядочивание на основе дистанции от объекта до наблюдателя. Определяется эта величина как расстояние между векторами положений камеры и самого объекта. Далее мы сохраним это расстояние вместе с вектором положения объекта в контейнере <i>map </i>стандартной библиотеки C++. Ассоциативный контейнер <i>map </i>автоматически обеспечит упорядочивание хранимых элементов на основе значений ключа, так что нам будет достаточно всего лишь занести все пары дистанция-положение объектов:<br/>
+<br/>
+<pre><code class="cpp">std::map&lt;float, glm::vec3&gt; sorted;
+for (unsigned int i = 0; i &lt; windows.size(); i++)
+{
+    float distance = glm::length(camera.Position - windows[i]);
+    sorted[distance] = windows[i];
+}</code></pre><br/>
+
+В результате у нас будет контейнер с положениями объектов окна, отсортированными по величине distance от наименьшей до наибольшей.<br/>
+<br/>
+
+В момент отрисовки нам понадобиться пройтись по контейнеру в обратном порядке (от наибольшего удаления до наименьшего) и нарисовать окна в соответствующих положениях:<br/>
+<br/>
+<pre><code class="cpp">for(std::map&lt;float,glm::vec3&gt;::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) 
+{
+    model = glm::mat4();
+    model = glm::translate(model, it-&gt;second);				
+    shader.setMat4("model", model);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+} </code></pre><br/>
+
+Здесь мы используем обратный итератор для контейнера, чтобы обеспечить проход по нему в обратном порядке. Каждый объект окна при этом смещается в соответствующее положение и отрисовывается. Относительно несложная модификация кода привела к полному разрешению ранее обозначенной проблемы:<br/>
+<br/>
+<div style="text-align:center;"><img src="https://habrastorage.org/webt/oe/to/ct/oetocthbbnory-x9ir9jqgqioiy.png"/></div><br/>
+
+Как видно, сцена теперь выводится корректно. Исходный код примера находится <a href="https://learnopengl.com/code_viewer_gh.php?code=src/4.advanced_opengl/3.2.blending_sort/blending_sorted.cpp">здесь</a>.<br/>
+
+Стоит отметить, что простая сортировка по дальности хоть и хорошо сработала в данном случае, но не учитывает таких особенностей как повороты, масштабирование и прочие трансформации объектов. Также объекты сложной формы потребовали бы более изощренной метрики для сортировки, нежели только удаленность от камеры.<br/>
+<br/>
+
+Кроме того, сортировка не дается бесплатно: сложность этой задачи определяется видом и составом сцены, а сам процесс требует дополнительных вычислительных затрат. Существуют и более продвинутые методы вывода сцен, содержащих как прозрачные, так и непрозрачные объекты: например, алгоритм порядко-независимой прозрачности (<i>Order Independent Transparency, OIT</i>). Но освещение этой темы выходит за рамки урока. А вам придется обходиться обычной реализацией смешивания. Но для печали нет причины, зная ограничения технологии и будучи осторожным, можно добиться вполне впечатляющих результатов!<br/>
+<br/>
+<b>P.S.</b>: И снова в комментариях <a href="http://disq.us/url?url=http%3A%2F%2Fandersriggelsen.dk%2Fglblendfunc.php%3AoONYjZshyYJQReCBKfslyR2X3zY&amp;cuid=2951374">полезная ссылка</a>. Можно вживую посмотреть, как выбор режимов смешивания влияет на итог.<br/>
+<b>P.P.S.</b>: У нас с <a class="user_link" href="https://habrahabr.ru/users/eanmos/">eanmos</a> есть <a href="https://t.me/joinchat/Cpb05A46UPpMWdNVVCb4Vg">телеграм-конфа </a>для координации переводов. Если есть желание вписаться в цикл, то милости просим!</div>
+<script data-counter="2820404" id="js-mpf-mediator-init">!function(e){function t(t,n){if(!(n in e)){for(var r,a=e.document,i=a.scripts,o=i.length;o--;)if(-1!==i[o].src.indexOf(t)){r=i[o];break}if(!r){r=a.createElement("script"),r.type="text/javascript",r.async=!0,r.defer=!0,r.src=t,r.charset="UTF-8";;var d=function(){var e=a.getElementsByTagName("script")[0];e.parentNode.insertBefore(r,e)};"[object Opera]"==e.opera?a.addEventListener?a.addEventListener("DOMContentLoaded",d,!1):e.attachEvent("onload",d):d()} } }t("//top-fwz1.mail.ru/js/code.js","_tmr"),t("//mediator.imgsmail.ru/2/mpf-mediator.min.js","_mediator")}(window);</script>
+</div>
+<dl class="post__tags">
+<dt class="post__tags-label">Метки:</dt>
+<dd class="post__tags-list"> <ul class="inline-list inline-list_fav-tags js-post-tags">
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B4%5D&amp;target_type=posts" rel="tag">перевод</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bopengl%5D&amp;target_type=posts" rel="tag">opengl</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bopengl%203%5D&amp;target_type=posts" rel="tag">opengl 3</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Blearnopengl.com%5D&amp;target_type=posts" rel="tag">learnopengl.com</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bblending%5D&amp;target_type=posts" rel="tag">blending</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Balpha%20blending%5D&amp;target_type=posts" rel="tag">alpha blending</a></li>
+</ul>
+<button class="btn btn_outline_grey btn_mini hidden js-fav-edit-link" data-id="343096" data-type="2" onclick="show_edit_tags(this)" type="button">Добавить метки</button>
+</dd>
+</dl>
+</div>
+</article>, <article class="post post_full" id="post_344290">
+<div class="post__wrapper">
+<header class="post__meta">
+<a class="post__user-info user-info" href="https://habrahabr.ru/users/nsuvorov/" title="Автор публикации">
+<img class="user-info__image-pic user-info__image-pic_small" height="24" src="//habrastorage.org/getpro/habr/avatars/d6c/3ce/fc4/d6c3cefc4f953b6c99399984de1353a9.jpg" width="24"/>
+<span class="user-info__nickname user-info__nickname_small">nsuvorov</span>
+</a>
+<span class="post__time">сегодня в 16:03</span>
+</header>
+<h1 class="post__title post__title_full">
+<span class="post__title-text">Руководство по блокчейн для маркетолога</span>
+</h1>
+<div class="post__translatation">
+<a class="post__translatation-link" href="https://adexchanger.com/online-advertising/marketers-guide-blockchain/" target="_blank" title="Автор оригинальной публикации: James Hercher">https://adexchanger.com/online-advertising/marketers-guide-blockchain/</a>
+</div>
+<ul class="post__hubs post__hubs_full-post inline-list">
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/display_adv/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Медийная реклама'); }" title="Вы не подписаны на этот хаб">Медийная реклама</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/crypto/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Криптография'); }" title="Вы не подписаны на этот хаб">Криптография</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/context/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Контекстная реклама'); }" title="Вы не подписаны на этот хаб">Контекстная реклама</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/business_models/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Бизнес-модели'); }" title="Вы не подписаны на этот хаб">Бизнес-модели</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/solidity/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Solidity'); }" title="Вы не подписаны на этот хаб">Solidity</a>
+</li>
+</ul>
+<ul class="post__marks inline-list"><li class="inline-list__item inline-list__item_post-type"><span class="post__type-label" title="Перевод">Перевод</span></li></ul>
+<div class="post__body post__body_full">
+<div class="post__text post__text-html js-mediator-article"><div style="text-align:center;"><img src="https://habrastorage.org/webt/rg/yn/ch/rgynch2ikjl62qfoe6gn3cwhnhs.png"/></div><br/>
+
+Блокчейн, неизменяемый и невзламываемый реестр транзакций, был придуман 10 лет назад, чтобы стать основой для криптовалюты Bitcoin. С тех пор она сфера применения этой технологии расширилась от финансов до медицинских услуг и, в последнее время, digital-рекламы.<br/>
+
+Это происходит с подачи таких крупных компаний, как IBM и Comcast, а также небольших стартапов вроде MadHive и Rebel AI.<br/>
+<a name="habracut"></a><br/>
+<br/>
+<h2>Почему возникла эта тема?</h2><br/>
+
+В то время как признаваемые государством законные платёжные средства (т.н. «фиатные» деньги) лежат в банковских сейфах, Bitcoin использует реестр транзакций блокчейн, чтобы гарантировать безопасность, обеспечивая полную прозрачность использования криптовалюты. Блокчейн хранит историю транзакций по каждой миллионной доле когда-либо «добытой» монеты, а также всю информацию о количестве биткоинов принадлежащих любому лицу (если сопоставлены электронные подписи и это лицо – прим. перев.). Эта информация открыта и доступна для всех желающих.<br/>
+<br/>
+
+Применяя blockchain технологии для рекламных сделок, владельцы данных могут безопасно обмениваться своими активами без их экспорта или передачи другим заинтересованным сторонам. А владельцы площадок могут нанести удар по неавторизованным продавцам и киберсквоттерам.<br/>
+<br/>
+
+«Мощнейшим свойством Блокчейн является возможность его применения в сетях, где есть недоверие между заинтересованными сторонами», утверждает CTO группы «Media &amp; Entertainment» компании IBM, Питер Гуглилмино.<br/>
+<br/>
+
+Несмотря на интерес рекламного технического сообщества в blockchain, потенциальные приложения — и их уровень зрелости — резко различаются.<br/>
+<br/>
+<h2>Что же может дать блокчейн для рекламной индустрии?</h2><br/>
+<br/>
+<b>Отсеять убрать нежелательных посредников из цепочки поставок: </b>Блокчейн может помочь обеспечить цепочку поставок рекламы без посредников, которые манипулируют инвентарём. Или гарантировать поставки трафика без блокировщиков рекламы.<br/>
+<br/>
+
+Вот типичный пример применения блокчейн: нечистоплотный селлер может обмануть рекламодателя, создавая ряд клонов официального адреса площадки (и выдавая их за подлинные – <i>прим. перев.</i>). Например, CNN-trending.com или NBCcom.com. Блокчейн может быть использован для защиты от подобных действий, при помощи создания реестра «настоящих» URL принадлежащих определённой площадке. Список таких URL будет удостоверен уникальной цифровой подписью, которую невозможно подделать. Список доменов площадки, на которых будет размещена реклама, при этом, будет браться непосредственно из блокчейн, минуя каких-либо посредников.<br/>
+<br/>
+<b>Облегчение обмена данными: </b>Для большинства компаний данные являются одним из самых ценных их активов. Не удивительно, что обмен данными — даже с проверенными партнерами — может быть чреват серьёзными рисками. Некоторые производители уже сейчас продвигают блокчейн, как средство отслеживания фактов обмена данными так что их владельцы точно знают к каким данным получил доступ партнёр и когда.<br/>
+<br/>
+
+Эта проблема в большей степени касается ТВ-баинга, и связана с наличием множества сторон и необходимостью упорядочить взаимодействия между ними. В июне 2017 года, IBM совместно Integral Ad Science, Premion и adtech-стартапом MadHive, <a href="https://adexchanger.com/online-advertising/online-advertising-puts-another-link-blockchain/">сформировали консорциум AdLedger</a>. Цель этого консорциума состоит в том, чтобы построить блокчейн-решение для обмена данными, ориентированного на ведущих рекламодателей ТВ.<br/>
+<br/>
+
+Comcast также представил основанный на <a href="https://adexchanger.com/data-exchanges/coming-2018-comcast-hopes-spur-data-sharing-blockchain-technology/">блокчейн альянс вещателей</a>, включающий Altice USA, Cox, NBCUniversal и Disney. Основная идея в том, что указанные площадки будут обмениваться данными и записывать информацию об этих транзакциях в blockchain. Таким образом, рекламодатель сможет больше доверять данным в сегментах для таргетированной рекламы.<br/>
+
+Процесс основан на «умных» контрактах, которые могут управлять операциями в blockchain. Так что, если Comcast и Cox имеют различное количество инвентаря для специфического контента или аудитории, или если рекламодатель хочет внести в чёрный список определённые источники трафика, это всё учитывается на уровне смарт-контракта для каждой компании. Там же определяется доступ к этим данным извне.<br/>
+<br/>
+<b>Реселлинг инвентаря: </b>NYIAX («найекс»), стартап инициированный биржей Nasdaq, развивает идею продажи инвентаря как фьючерсных контрактов на базе blockchain. По мнению основателей, этот механизм сделает закупки боле комфортными для рекламодателей. В случае успеха, NYIAX может дать площадкам больше гибкости в подготовке коммерческих предложений. Рекламодатели могли бы бронировать инвентарь на более долгий период времени, а площадки поощрять выкупленные заранее объёмы скидками. И в этом случае, blockchain будет служить в качестве реестра состоявшихся броней и их стоимости.<br/>
+<br/>
+<h2>Блокчейн всё ещё в зачаточном состоянии</h2><br/>
+
+Прежде всего, тем кто заинтригован технологией, следует понимать, что blockchain все еще находится в зачаточном состоянии. Многие из инструментов, указанных выше пребывают в альфа- или бета- версии, либо вообще в виде идеи.<br/>
+<br/>
+
+Блокчейн-платформа для обмена данными Comcast, как ожидается, не будет запущена до 2018 года. Для проекта AdLedger все еще формируется рабочая группа, которая будет прорабатывать концепцию и спецификации API для своей платформы.  NYIAX продолжает работать над концепцией с партнерами.<br/>
+<br/>
+
+«Мы говорили с сотнями площадок, со всеми крупными медиагруппами и агентствами, и это медленный, методичный процесс. Должен быть поэтапный подход», — сказал генеральный директор NYIAX Лу Северин, - «Пройдёт некоторое время, прежде чем мы перейдём к стадии запросов на конкретные проекты со стороны клиентов агентств».<br/>
+<br/>
+
+Но blockchain технология достаточно интересна и медиагруппы сейчас думают, как ее применить. IAB «в активном поиске возможностей» blockchain и ведет переговоры со стартапами, утверждает Аланна Гомберт, генеральный директор IAB Tech Lab.<br/>
+
+Гуглилмино из IBM отмечает, что blockchain-стартапы сегодня используют различные подходы, «но консенсус касается экосистемы, существующие решения в дальнейшем будут более интегрированы».<br/>
+<br/>
+
+Он добавил, что «Важно установить планку стандартов. Тогда они будут доступны для использования всеми, если их компании готовы взяться за это и видят ценность блокчейна».<br/>
+<br/>
+<h2>Главные препятствия впереди</h2><br/>
+
+Разработчики блокчейн сталкиваются с жесткими препятствиями при попытках создать решения для рекламы. Главное из них: это слишком медленно, чтобы масштабировать.<br/>
+
+Большие рекламные платформы, такие как AppNexus или DoubleClick Ad Exchange обрабатывают миллионы показов объявлений в секунду. Bitcoin, тем временем, обрабатывает около пяти транзакций в секунду.<br/>
+<br/>
+
+«Распределенный характер блокчейна и возможность внесения изменений с любого компьютера в сети по всему миру – это одновременно польза и вызов», утверждает Уилл Латрел, соучредитель и бывший технический директор компании Integral Ad Science (разработчик <a href="https://technical.ly/philly/2017/07/12/amino-raised-1-75-million-currenc-will-luttrell-david-bookspan/">блокчейн-платформы Amino</a>).<br/>
+<br/>
+
+Медлительность блокчейн делает невозможным его выход на рынок RTB, по крайней мере сейчас. Отчасти поэтому пионеры использования этой технологии в рекламе, такие как Comcast или консорциум AdLedger, больше сфокусированы на обмене данными и планировании кампаний.<br/>
+<br/>
+
+Подтверждение сделки в блокчейн занимает 10-30 секунд, говорит Мэнни Пуэнтс, генеральный директор AdTech стартапа <a href="http://rebelai.com/">Rebel AI</a>. «Должно пройти время, прежде чем технология будет способна на скорости до миллисекунд, используемые в онлайн-рекламе».<br/>
+
+NYIAX решает эту проблему путем продажи фьючерсов, гарантирующих показы по определённой цене в будущем.<br/>
+<br/>
+
+«Скорости там нет, и, честно говоря, никогда не будет», считает Северин.<br/>
+
+Если blockchain сделки никогда не впишутся в стек технологий RTB вопрос возможности использования этой технологии остается открытым для тех, кто занимает данную рыночную нишу.<br/>
+<br/>
+
+Баинг инвентаря посредством блокчейн возможно будет осуществлять напрямую: агентство или партнёр бренда будет закупать прямо у площадки. Это будет похоже на традиционные сделки по ТВ из-за большой задержки по времени, предполагает Гомберт. «Но по мере совершенствования технологии, это ограничение уйдёт».<br/>
+<br/>
+<h2>Слишком много прозрачности?</h2><br/>
+
+Бренды и медиагруппы требуют прозрачности от Digital — но чрезмерная прозрачность может быть вредна.<br/>
+<br/>
+
+«В дополнение к масштабу и скорости, есть проблема прозрачности, поскольку она усложнит переговоры», считает Латрел.<br/>
+<br/>
+
+Рассмотрим на примере блокчейн-инициативы Comcast. Участвующие в ней игроки хотели бы сохранять в блокчейн некоторые данные для некоторых рекламодателей, но они не горят желанием, чтобы другие СМИ на этой платформе видели, какие данные они размещают (и кто именно), а также сколько они стоят. Они также не хотят, чтобы их DSP, SSPs или информация о партнёрах были доступны другим.<br/>
+<br/>
+
+Всё больше участников рынка потенциально могут использовать блокчейн в повседневных проектах, считает Кен Брук, генеральный директор блокчейн-стартапа Metax. «Но, когда вы начинаете добавлять площадки, селлеров и данные, которые безусловно влияют на логику и процесс рекламных кампаний, количество сопутствующих технических сложностей только возрастает».<br/>
+<br/>
+<h2>Первопроходцы в блокчейн для маркетинга</h2><br/>
+<a href="http://madhive.com/">MadHive</a>: Один из первых рекламных блокчейнов. MadHive одним из первых внедрил партнёрскую схему для проектов Over on Top (вариант IPTV). IBM является первым крупным партнёром MadHive в рамках консорциума AdLedger. Предполагается, что благодаря этому объединению, до конца 2017 года удастся провести ряд сделок нового типа, в которых данные продаются за другие данные, без закупок собственно рекламного инвентаря. «Исследование новых технологий ТВ – вот на что сейчас тратятся большие средства», сказал основатель компании Адам Хелфготт.<br/>
+<br/>
+<a href="http://rebelai.com/">Rebel AI</a>: Блокчейн AdTech стартап, которые развивает идею прямого взаимодействия между площадками и баерами агентств, либо DSP. Использование продукта позволит отказаться от посредников, что по словам основателя Мэнни Пуэнтса: «Более похоже на проверенные временем отношения покупателей и продавцов поставляющих рекламный продукт». Стартап позиционирует себя, как как безопасный канал закупки рекламы, позволяющий избежать проблем с фродом и качеством трафика, свойственных открытым программатик платформам.<br/>
+<br/>
+<a href="https://www.metax.io/">MetaX</a>: MetaX экспериментирует со смесью блокчейн и решений вне рамок этой технологии для применения на рынке рекламы. Компания работает с некоммерческой платформой adChain с открытым исходным кодом, которая базируется на технологиях блокчейн Ethereum. Metax пытается генерировать прибыль для материнской компании за счёт монетизации приложений созданных на adChain. Например для обмена данными или атрибуции инвентаря. Стартап тесно сотрудничает с Data &amp; Marketing Association (DMA).<br/>
+<br/>
+<a href="http://www.coindesk.com/comcast-wants-ad-buyers-to-buy-on-blockchain/">Comcast</a>: Обладает обширным портфелем эфирных и кабельных ТВ-каналов представленных на всей территории США. Comcast использует блокчейн для прямого обмена данными без взаимодействия с устаревшей сетью посредников, таких Acxiom и Experian. Кроме того, при помощи этой модели, медиа-гигант стремится отойти от услуг стартапов в области адресной ТВ рекламы, которые добавляют ценность, но забирают прибыль. Платформа «Comcast, Blockchain Insights» выйдет из беты не ранее, чем через полтора года. Однако, даже при таких отдалённых перспективах запуска, Comcast непрерывно обучает партнёров и развивает технологии интеграции платформ.<br/>
+<br/>
+<a href="https://www.nyiax.com/">NYIAX</a>: Опираясь на запатентованную блокчейн-технологию биржи Nasdaq, стартап NYIAX создаёт продукт, который позволит трейдерам покупать и продавать права на будущие онлайн размещения. Это позволит площадкам упаковать гарантированные медиа-ресурсы даже лучше, чем в случае годовых сделок с ТВ-рекламой. Хотя вероятно при внедрении этой технологии NYIAX ещё столкнётся с сопротивлением площадок, которые возможно будут не готовы продавать свой продукт в качестве отдельных единиц на открытом рынке. <br/>
+<br/>
+<a href="http://www.prweb.com/releases/2017/06/prweb14455059.htm">IBM</a>: ИТ-гигант находится в относительно сильной позиции, чтобы создать Bluemix, набор облачных сервисов, включающих блокчейн движки, напоминает Гуглилмино. В то время как блокчейн-стартапы с трудом ищут маржу там, где ещё нет клиентских бюджетов, IBM может вкладываться в R&amp;D и вовсю применять свои достижений в технологиях, связанных с другими отраслями, такими как здравоохранение и финансы.</div>
+<script data-counter="2820404" id="js-mpf-mediator-init">!function(e){function t(t,n){if(!(n in e)){for(var r,a=e.document,i=a.scripts,o=i.length;o--;)if(-1!==i[o].src.indexOf(t)){r=i[o];break}if(!r){r=a.createElement("script"),r.type="text/javascript",r.async=!0,r.defer=!0,r.src=t,r.charset="UTF-8";;var d=function(){var e=a.getElementsByTagName("script")[0];e.parentNode.insertBefore(r,e)};"[object Opera]"==e.opera?a.addEventListener?a.addEventListener("DOMContentLoaded",d,!1):e.attachEvent("onload",d):d()} } }t("//top-fwz1.mail.ru/js/code.js","_tmr"),t("//mediator.imgsmail.ru/2/mpf-mediator.min.js","_mediator")}(window);</script>
+</div>
+<dl class="post__tags">
+<dt class="post__tags-label">Метки:</dt>
+<dd class="post__tags-list"> <ul class="inline-list inline-list_fav-tags js-post-tags">
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%B1%D0%BB%D0%BE%D0%BA%D1%87%D0%B5%D0%B9%D0%BD%5D&amp;target_type=posts" rel="tag">блокчейн</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bblockchain%5D&amp;target_type=posts" rel="tag">blockchain</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bethereum%5D&amp;target_type=posts" rel="tag">ethereum</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bbitcoin%5D&amp;target_type=posts" rel="tag">bitcoin</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%BC%D0%B0%D1%80%D0%BA%D0%B5%D1%82%D0%B8%D0%BD%D0%B3%5D&amp;target_type=posts" rel="tag">маркетинг</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bdigital%5D&amp;target_type=posts" rel="tag">digital</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%BC%D0%B5%D0%B4%D0%B8%D0%B9%D0%BD%D0%B0%D1%8F%20%D1%80%D0%B5%D0%BA%D0%BB%D0%B0%D0%BC%D0%B0%5D&amp;target_type=posts" rel="tag">медийная реклама</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D0%B0%D0%B3%D0%B5%D0%BD%D1%82%D1%81%D1%82%D0%B2%D0%B0%5D&amp;target_type=posts" rel="tag">агентства</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D1%80%D0%B5%D0%BA%D0%BB%D0%B0%D0%BC%D0%B0%5D&amp;target_type=posts" rel="tag">реклама</a></li>
+</ul>
+<button class="btn btn_outline_grey btn_mini hidden js-fav-edit-link" data-id="344290" data-type="2" onclick="show_edit_tags(this)" type="button">Добавить метки</button>
+</dd>
+</dl>
+</div>
+</article>, <article class="post post_full" id="post_344272">
+<div class="post__wrapper">
+<header class="post__meta">
+<a class="post__user-info user-info" href="https://habrahabr.ru/users/ivanuzzo/" title="Автор публикации">
+<span class="default-image_mini default-image_pink">
+<svg aria-hidden="true" class="icon-svg" height="24" role="img" version="1.1" viewbox="0 0 24 24" width="24"><path d="M21.5 24h-19c-1.379 0-2.5-1.122-2.5-2.5v-19c0-1.379 1.122-2.5 2.5-2.5h19c1.379 0 2.5 1.122 2.5 2.5v19c0 1.379-1.122 2.5-2.5 2.5zm-19-23c-.827 0-1.5.673-1.5 1.5v19c0 .827.673 1.5 1.5 1.5h19c.827 0 1.5-.673 1.5-1.5v-19c0-.827-.673-1.5-1.5-1.5h-19zM15.598 12.385zM19.438 15.417l-.002-.005v-.001c-.875-2.226-2.484-3.054-3.445-3.549l-.273-.143c.029-.497-.025-1.034-.167-1.599l-.128.032.123-.044c-.765-2.152-1.757-2.585-2.632-2.967l-.006-.003-.535-2.121c.357-.065.628-.375.628-.752.001-.423-.342-.765-.765-.765s-.766.342-.766.765c0 .358.248.657.581.74l-.825 1.654-.014-.003-.024-.003c-1.053-.033-1.842.369-2.5.947-.633-.322-1.515-.729-2.158-1.814.107-.12.174-.276.174-.45 0-.375-.303-.678-.678-.678s-.678.303-.678.678.303.678.678.678l.221-.04c.416.597 1.09 1.181 1.347 2.828l-.072.091.104.081-.112-.067c-1.157 1.914-.793 4.248.207 5.37-.998 2.546-1.035 4.681-.097 5.868l.002.002.003.003c.119.162.313.233.524.233.189 0 .39-.057.559-.154.312-.179.441-.459.326-.713l-.12.054.119-.056c-.581-1.243-.474-2.713.314-4.37.4.131.778.208 1.145.234l.139.73c.264 1.418.514 2.757 1.297 4.006.132.264.453.387.777.387.122 0 .245-.018.357-.051.385-.116.591-.399.537-.738l-.129.021.125-.042c-.204-.606-.431-1.146-.649-1.67-.373-.894-.725-1.742-.891-2.737.407-.042.797-.129 1.161-.261.825.692 1.661 1.492 2.743 3.406h.001c.072.14.224.215.41.215.105 0 .222-.024.339-.073.365-.155.652-.531.477-1.006v-.001c-.432-1.849-1.426-2.778-2.428-3.547.162-.175.311-.366.442-.576.75.399 1.878 1.005 3.127 2.766l.047.067.011-.008c.151.156.317.24.48.24.096 0 .191-.027.279-.084.306-.194.439-.662.29-1.005zm-8.878-2.493c-.947 0-1.713-.767-1.713-1.713s.767-1.713 1.713-1.713c.947 0 1.713.767 1.713 1.713s-.767 1.713-1.713 1.713zm6.587 4.648l-.084.021v-.001l.084-.02zm-2.007-5.312zm.022 1.006zM11.225 11.604c0 .385-.312.697-.697.697s-.697-.312-.697-.697c0-.385.312-.697.697-.697s.697.312.697.697z"></path></svg>
+</span>
+<span class="user-info__nickname user-info__nickname_small">ivanuzzo</span>
+</a>
+<span class="post__time">сегодня в 00:58</span>
+</header>
+<h1 class="post__title post__title_full">
+<span class="post__title-text">Angular 5 (или 4): даунгрейдим компонент для использования в AngularJS</span>
+</h1>
+<ul class="post__hubs post__hubs_full-post inline-list">
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/javascript/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'JavaScript'); }" title="Вы не подписаны на этот хаб">JavaScript</a>, 
+          </li>
+<li class="inline-list__item inline-list__item_hub">
+<a class="inline-list__item-link hub-link " href="https://habrahabr.ru/hub/angular/" onclick="if (typeof ga === 'function') { ga('send', 'event', 'hub', 'post page', 'Angular'); }" title="Вы не подписаны на этот хаб">Angular</a>
+</li>
+</ul>
+<ul class="post__marks inline-list"></ul>
+<div class="post__body post__body_full">
+<div class="post__text post__text-html js-mediator-article">На днях возникла весьма необычная задача: понадобилось узнать, как компоненты из Angular использовать в AngularJS. Вроде и задача на пять минут, т.к. интернет пестрит схожими примерами, да и в документации вроде бы <a href="https://angular.io/api/upgrade/static/downgradeComponent">что-то</a> есть. Но на деле оказалось, что не все так солнечно и решение вопроса заняло куда больше времени. Вобщем, счастливым саппортерам легаси кода и просто angular-извращенцам посвящается<a name="habracut"></a><br/>
+<br/>
+
+Сперва традиционная рубрика TL DR: <a href="http://plnkr.co/edit/pXGfnVhW8dyqkF8udl3m">Хорош графоманить, пример в студию</a><br/>
+<br/>
+
+Ну а теперь можно графоманить.<br/>
+<br/>
+
+Начну с того, что документация у ангулара крайне плоха. Так было в первой версии, так продолжается до сих пор. Традиция, вобщем. Поэтому за основу для даунгрейда брал <a href="https://hackernoon.com/angular-v4-hybrid-upgrade-application-73d5afba1e01">эту статью</a>. Теперь сам код:<br/>
+<br/>
+<b>Внимание!</b> Для полноты ощущений ниже я привожу no-typescript пример angular компонента. Весь дальнейший код будет выдержан в таком стиле.<br/>
+<br/>
+
+Итак, собственно, компонент:<br/>
+<br/>
+<pre><code class="javascript">let HelloComponent = function () {
+};
+
+HelloComponent.annotations = [
+  new ng.core.Component({
+    selector: 'hello-world',
+    template: 'Hello World!'
+  })
+];
+</code></pre><br/>
+
+Казалось бы, этого и достаточно, пора вызывать <a href="https://angular.io/api/upgrade/static/downgradeComponent">downgradeComponent</a>. Но нет. Тут документация дала осечку, поскольку пример, приведенный в ней, — неполный.<br/>
+<br/>
+
+Добавляем код AppModule:<br/>
+<br/>
+<pre><code class="javascript">class AppModule {
+}
+
+AppModule.prototype.ngDoBootstrap = function() {
+  // do nothing
+};
+
+AppModule.annotations = [
+  new ng.core.NgModule({
+    declarations: [HelloComponent],
+    imports: [ng.upgrade.static.UpgradeModule, ng.platformBrowser.BrowserModule],
+    entryComponents: [HelloComponent]
+  })
+];
+</code></pre><br/>
+
+Про ngDoBootstrap можно почерпнуть из статьи, которую я указывал выше, как основу для даунгрейда.<br/>
+<br/>
+
+Так, модуль сделали, теперь надо подключить все это в AngularJS:<br/>
+<br/>
+<pre><code class="javascript">angular.module("app", [])
+.directive("helloWorld", ng.upgrade.static.downgradeComponent({component: HelloComponent}))
+</code></pre><br/>
+
+После чего добавить загрузку самого Angular:<br/>
+<br/>
+<pre><code class="javascript">ng.platformBrowserDynamic.platformBrowserDynamic().bootstrapModule(AppModule).then(platformRef =&gt; {
+  const upgrade = platformRef.injector.get(ng.upgrade.static.UpgradeModule);
+  upgrade.bootstrap(document.body, ['app'], { strictDi: true });
+});
+</code></pre><br/>
+
+Но и этот пример не работает, говорит что-то насчет <blockquote>Unknown provider: $$angularLazyModuleRefProvider</blockquote><br/>
+<br/>
+
+В конечном итоге оказывается, что просто напросто нужно передать $$UpgradeModule в качестве зависимости модуля AngularJS.<br/>
+<br/>
+
+P.S. решил написать статью из соображений, что подобное может понадобиться кому-то еще. Буду рад, если смог кому-то помочь.<br/>
+<br/>
+
+P.P.S. Еще ссылки: <a href="https://blog.thoughtram.io/angular/2015/05/09/writing-angular-2-code-in-es5.html">пишем на angular в es5</a></div>
+<script data-counter="2820404" id="js-mpf-mediator-init">!function(e){function t(t,n){if(!(n in e)){for(var r,a=e.document,i=a.scripts,o=i.length;o--;)if(-1!==i[o].src.indexOf(t)){r=i[o];break}if(!r){r=a.createElement("script"),r.type="text/javascript",r.async=!0,r.defer=!0,r.src=t,r.charset="UTF-8";;var d=function(){var e=a.getElementsByTagName("script")[0];e.parentNode.insertBefore(r,e)};"[object Opera]"==e.opera?a.addEventListener?a.addEventListener("DOMContentLoaded",d,!1):e.attachEvent("onload",d):d()} } }t("//top-fwz1.mail.ru/js/code.js","_tmr"),t("//mediator.imgsmail.ru/2/mpf-mediator.min.js","_mediator")}(window);</script>
+</div>
+<dl class="post__tags">
+<dt class="post__tags-label">Метки:</dt>
+<dd class="post__tags-list"> <ul class="inline-list inline-list_fav-tags js-post-tags">
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bangular%5D&amp;target_type=posts" rel="tag">angular</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5Bangularjs%5D&amp;target_type=posts" rel="tag">angularjs</a></li>
+<li class="inline-list__item inline-list__item_tag"><a class="inline-list__item-link post__tag " href="https://habrahabr.ru/search/?q=%5B%D1%85%D0%B0%D1%80%D0%B4%D0%BA%D0%BE%D1%80%5D&amp;target_type=posts" rel="tag">хардкор</a></li>
+</ul>
+<button class="btn btn_outline_grey btn_mini hidden js-fav-edit-link" data-id="344272" data-type="2" onclick="show_edit_tags(this)" type="button">Добавить метки</button>
+</dd>
+</dl>
+</div>
+</article>
